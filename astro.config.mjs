@@ -19,7 +19,7 @@ export default defineConfig({
 				replacesTitle: false,
 			},
 			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/arova-ai/arova-nexus' },
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/arova-ai/arova-nexus-docs' },
 			],
 			sidebar: [
 				{
