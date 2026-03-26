@@ -1,0 +1,62 @@
+---
+title: Arova Nexus 使用手冊
+description: AI 驅動的 IT 維運自動化平台 — 使用者操作指南
+template: splash
+hero:
+  tagline: AI-First IT Operations Platform — v1.0-preview 使用手冊
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: 快速入門（30 分鐘）
+      link: /arova-nexus-docs/guide/quick-start/
+      icon: right-arrow
+    - text: 管理員設定
+      link: /arova-nexus-docs/guide/admin-setup/
+      icon: setting
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## 依角色快速導讀
+
+<CardGrid>
+	<Card title="🔧 IT 維運人員" icon="rocket">
+		負責處理資安事件和日常維運。
+		從[事件管理](/arova-nexus-docs/guide/incident-management/)開始，搭配[自動化](/arova-nexus-docs/guide/automation/)提升效率。
+	</Card>
+	<Card title="⚙️ IT 管理員" icon="setting">
+		負責系統設定和整合。
+		從[管理員設定](/arova-nexus-docs/guide/admin-setup/)開始，接著設定 [Graylog + LibreNMS 整合](/arova-nexus-docs/guide/graylog-librenms-integration/)。
+	</Card>
+	<Card title="📊 主管" icon="document">
+		關注報表和營運指標。
+		查看[分析報表](/arova-nexus-docs/guide/analytics-reporting/)了解如何設定排程資安報告。
+	</Card>
+	<Card title="❓ 遇到問題？" icon="warning">
+		查看[常見問題 (FAQ)](/arova-nexus-docs/guide/faq/) 取得快速解答和問題排除指引。
+	</Card>
+</CardGrid>
+
+## 本手冊涵蓋的模組
+
+<CardGrid>
+	<Card title="Nexus Core" icon="star">
+		Dashboard、AI Copilot、IAM、通知、稽核、API
+	</Card>
+	<Card title="Incident Management" icon="warning">
+		事件生命週期、警報接收、AI 分析
+	</Card>
+	<Card title="Analytics Pro" icon="document">
+		儀表板、排程報表、SLA 分析
+	</Card>
+	<Card title="Knowledge System" icon="open-book">
+		知識庫、RAG AI 問答
+	</Card>
+	<Card title="Automation Platform" icon="rocket">
+		流程自動化、排程、Dry-Run
+	</Card>
+	<Card title="Integration Platform" icon="puzzle">
+		Graylog、LibreNMS、SMTP、Slack、Line
+	</Card>
+</CardGrid>

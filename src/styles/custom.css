@@ -1,0 +1,14 @@
+/* Arova Nexus — only override accent colors, leave Starlight grays untouched */
+
+:root {
+	--sl-color-accent-low: #ecfeff;
+	--sl-color-accent: #0891b2;
+	--sl-color-accent-high: #0c4a6e;
+	--sl-font: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+}
+
+:root[data-theme='dark'] {
+	--sl-color-accent-low: #164e63;
+	--sl-color-accent: #22d3ee;
+	--sl-color-accent-high: #ecfeff;
+}

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 900" font-family="Inter, 'Noto Sans TC', system-ui, sans-serif" font-size="12">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect width="680" height="900" rx="12" fill="#fafbfc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="340" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">從警報到解決：完整事件處理流程</text>
+
+  <!-- Step 1: External alert -->
+  <rect x="170" y="50" width="340" height="36" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="340" y="73" text-anchor="middle" font-weight="600" fill="#0891b2">Graylog / LibreNMS 偵測到異常</text>
+
+  <line x1="340" y1="86" x2="340" y2="108" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 2: Webhook -->
+  <rect x="210" y="114" width="260" height="36" rx="8" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="340" y="137" text-anchor="middle" fill="#475569">送 Webhook 到 Arova Nexus</text>
+
+  <line x1="340" y1="150" x2="340" y2="172" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 3: Dedup check -->
+  <polygon points="340,178 480,210 340,242 200,210" fill="#fefce8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="340" y="214" text-anchor="middle" font-size="11" fill="#92400e">5 分鐘內有相似事件？</text>
+
+  <!-- Yes branch -->
+  <line x1="200" y1="210" x2="110" y2="210" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+  <rect x="20" y="194" width="86" height="32" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="63" y="214" text-anchor="middle" font-size="11" fill="#475569">合併事件</text>
+  <text x="155" y="202" font-size="10" fill="#16a34a">有</text>
+
+  <!-- No branch -->
+  <line x1="340" y1="242" x2="340" y2="268" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="348" y="260" font-size="10" fill="#dc2626">無</text>
+
+  <!-- Step 4: Auto-fill -->
+  <rect x="210" y="274" width="260" height="36" rx="8" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="340" y="297" text-anchor="middle" fill="#475569">自動填入標題、來源、嚴重度</text>
+
+  <line x1="340" y1="310" x2="340" y2="332" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 5: Auto-assign -->
+  <rect x="210" y="338" width="260" height="36" rx="8" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="340" y="361" text-anchor="middle" fill="#475569">自動分派給對應團隊</text>
+
+  <line x1="340" y1="374" x2="340" y2="396" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 6: AI summary -->
+  <rect x="190" y="402" width="300" height="36" rx="8" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="340" y="425" text-anchor="middle" font-weight="600" fill="#7c3aed">AI 產生初步分析摘要（30 秒內）</text>
+
+  <line x1="340" y1="438" x2="340" y2="460" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 7: Notify -->
+  <rect x="160" y="466" width="360" height="52" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="340" y="488" text-anchor="middle" font-weight="600" fill="#16a34a">通知處理人員</text>
+  <text x="340" y="506" text-anchor="middle" font-size="10" fill="#64748b">SEV1 → 全團隊 + 管理員｜SEV2 → 團隊主管｜SEV3/4 → 處理人</text>
+
+  <line x1="340" y1="518" x2="340" y2="540" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 8: Dashboard -->
+  <rect x="190" y="546" width="300" height="36" rx="8" fill="#fff" stroke="#0891b2" stroke-width="1.5"/>
+  <text x="340" y="569" text-anchor="middle" fill="#0891b2" font-weight="600">IT 維運在 Dashboard 看到新事件</text>
+
+  <line x1="340" y1="582" x2="340" y2="604" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 9: Decision -->
+  <polygon points="340,610 460,638 340,666 220,638" fill="#fefce8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="340" y="642" text-anchor="middle" font-size="11" fill="#92400e">是真的問題？</text>
+
+  <!-- False positive -->
+  <line x1="460" y1="638" x2="560" y2="638" stroke="#ef4444" stroke-width="1.5" marker-end="url(#a)"/>
+  <rect x="560" y="622" width="100" height="32" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1"/>
+  <text x="610" y="642" text-anchor="middle" font-size="11" fill="#dc2626">誤報關閉</text>
+  <text x="510" y="630" font-size="10" fill="#dc2626">否</text>
+
+  <!-- Real issue -->
+  <line x1="340" y1="666" x2="340" y2="692" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="348" y="682" font-size="10" fill="#16a34a">是</text>
+
+  <!-- Step 10: Investigate -->
+  <rect x="130" y="698" width="420" height="36" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="340" y="720" text-anchor="middle" font-weight="600" fill="#2563eb">調查 → AI 分析 + Copilot 問根因 + 查監控指標</text>
+
+  <line x1="340" y1="734" x2="340" y2="756" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 11: Fix -->
+  <rect x="170" y="762" width="340" height="36" rx="8" fill="#faf5ff" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="340" y="785" text-anchor="middle" font-weight="600" fill="#7c3aed">修復：手動操作 或 AI 觸發自動化流程</text>
+
+  <line x1="340" y1="798" x2="340" y2="820" stroke="#64748b" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Step 12: Resolve -->
+  <rect x="210" y="826" width="260" height="36" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="340" y="849" text-anchor="middle" font-weight="700" fill="#16a34a">已解決 → 事後回顧 → 關閉</text>
+
+  <!-- Timeline label -->
+  <rect x="16" y="50" width="4" height="812" rx="2" fill="#e2e8f0"/>
+  <text x="12" y="460" text-anchor="middle" font-size="10" fill="#94a3b8" transform="rotate(-90, 12, 460)">事件生命週期</text>
+</svg>

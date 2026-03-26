@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="300 190 430 400">
+  <defs>
+    <linearGradient id="g12" x1="675.62" y1="585.69" x2="525.49" y2="300.27" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#67E8F9"/>
+      <stop offset=".87" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="g6" x1="517.19" y1="449.47" x2="382.3" y2="569.3" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#67E8F9"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="g10" x1="449.3" y1="452.73" x2="534.6" y2="221.6" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="g15" x1="627.31" y1="479.14" x2="638.83" y2="368.95" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#67E8F9"/>
+      <stop offset="1" stop-color="#06B6D4" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="g24" x1="514.6" y1="218.43" x2="431.54" y2="398.17" gradientUnits="userSpaceOnUse">
+      <stop offset=".06" stop-color="#67E8F9"/>
+      <stop offset="1" stop-color="#06B6D4" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#g12)" d="M511.03,352.13c3.71-9.55,8.87-19.38,16.55-26.42,10.42-9.55,29.22-11.51,42.44-5.22.9.43,4.3,1.68,4.84,2.67.01.01.01.02.01.02l133.73,245.84h-79.35l-117.49-216.87"/>
+  <path fill="url(#g6)" d="M563.56,485.39c-.58-.01-1.16-.01-1.74-.01-71.65,0-133.94,26.22-165.64,83.61h-80.78l6.3-11.58c26.47-39.96,63.97-71.99,108.15-91.76,8.32-3.71,16.87-7,25.63-9.82,24.55-7.91,50.72-12.18,77.9-12.18,2.55,0,5.1.04,7.63.12l22.55,41.62Z"/>
+  <path fill="url(#g10)" d="M574.92,323.27c-.39-.71-.39-.39-4.42-2.25-12.13-5.6-31.86-4.13-42.27,5.42-7.69,7.04-12.2,16.69-17.08,25.7,0,0-45.12,83.28-45.12,83.28-40.9,9.49-78,28.87-108.65,55.48l154.36-283.75s63.17,116.12,63.18,116.13Z"/>
+  <path fill="url(#g15)" d="M708.6,569.03s-54.23,3.94-108.9-122.26c-53.34-123.15-47.97-110.31-47.97-110.31l23.14-13.26,133.73,245.84Z"/>
+  <path fill="url(#g24)" d="M411.33,391.71l100.4-184.57s23.48,56.33-53.57,167.76l-18.69,27.88-28.15-11.08Z"/>
+</svg>
