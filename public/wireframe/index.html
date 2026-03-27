@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arova Nexus MVP — Wireframe (shadcndraw)</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- rough.js for hand-drawn borders -->
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+
+<!-- Inter for data/body text -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- JasonHandwriting -->
+<style>
+@font-face {
+  font-family: 'JasonHandwriting';
+  src: url('https://cdn.jsdelivr.net/gh/max32002/JasonHandWritingFonts@20251204/webfont/JasonHandwriting1-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JasonHandwriting';
+  src: url('https://cdn.jsdelivr.net/gh/max32002/JasonHandWritingFonts@20251204/webfont/JasonHandwriting1-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+</style>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        hand: ['JasonHandwriting', 'cursive'],
+        body: ['Inter', 'sans-serif'],
+        mono: ['Courier New', 'monospace'],
+      },
+      colors: {
+        paper: '#ffffff',
+        card: '#ffffff',
+        ink: '#1c1917',
+        muted: '#78716c',
+        accent: '#0ea5e9',
+        'accent-light': '#bae6fd',
+        sev: {
+          red: '#ef4444',
+          amber: '#f59e0b',
+          green: '#22c55e',
+          blue: '#3b82f6',
+        }
+      }
+    }
+  }
+}
+</script>
+
+<style>
+/* ========== RESET + UNIVERSAL HANDWRITING FONT ========== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'JasonHandwriting', cursive !important; }
+body { font-size: 16px; color: #1c1917; background: #fff; overflow: hidden; height: 100vh; }
+code, pre, .mono { font-family: 'Courier New', monospace !important; }
+
+/* rough.js SVG always on top — hover backgrounds show UNDER the lines */
+svg.rc-svg { z-index: 10 !important; pointer-events: none; }
+
+/* ========== LAYOUT ========== */
+.app { display: flex; height: 100vh; }
+.sidebar { width: 200px; min-width: 200px; background: #fff; display: flex; flex-direction: column; height: 100vh; position: relative; }
+.main-area { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.topbar { height: 52px; min-height: 52px; background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: relative; }
+.content { flex: 1; overflow-y: auto; padding: 24px; background: #fff; }
+
+/* ========== WIREFRAME WATERMARK ========== */
+.sketch-watermark { position: fixed; bottom: 8px; left: 220px; font-family: 'JasonHandwriting', cursive; font-size: 14px; color: #d6d3d1; z-index: 50; letter-spacing: 1px; }
+
+/* ========== BLOCK NUMBERING ========== */
+.sketch-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; font-family: 'JasonHandwriting', cursive; font-size: 18px; color: #0ea5e9; font-weight: 700; margin-right: 8px; flex-shrink: 0; position: relative; }
+
+/* ========== ANNOTATIONS ========== */
+.sketch-anno { font-family: 'JasonHandwriting', cursive; font-size: 16px; color: #0ea5e9; font-weight: 500; }
+
+/* ========== CARD (no CSS border — rough.js draws it) ========== */
+.sketch-card { background: white; padding: 20px; margin-bottom: 24px; position: relative; }
+.sketch-card-title { font-family: 'JasonHandwriting', cursive; font-size: 22px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: #1c1917; }
+
+/* ========== KPI CARD ========== */
+.sketch-kpi { background: white; padding: 16px; text-align: center; position: relative; }
+.sketch-kpi-value { font-family: 'JasonHandwriting', cursive; font-size: 36px; font-weight: 700; color: #1c1917; }
+.sketch-kpi-label { font-family: 'JasonHandwriting', cursive; font-size: 18px; color: #78716c; margin-bottom: 6px; }
+.sketch-kpi-delta { font-family: 'JasonHandwriting', cursive; font-size: 16px; color: #78716c; margin-top: 4px; }
+
+/* ========== NAV ICONS ========== */
+.nav-icon { flex-shrink: 0; overflow: visible; color: #78716c; }
+.sidebar-nav li.active .nav-icon { color: #1c1917; }
+
+/* ========== SIDEBAR ========== */
+.sidebar-logo { padding: 16px; font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 18px; color: #1c1917; white-space: nowrap; }
+.sidebar-logo span { color: #78716c; font-weight: 500; font-size: 16px; }
+.sidebar-nav { list-style: none; padding: 12px 0; flex: 1; }
+.sidebar-nav li { padding: 12px 16px; cursor: pointer; font-family: 'JasonHandwriting', cursive; font-size: 20px; display: flex; align-items: center; gap: 10px; color: #78716c; transition: all 0.15s; }
+.sidebar-nav li:hover { color: #1c1917; }
+.sidebar-nav li.active { font-weight: 700; color: #1c1917; position: relative; }
+.sidebar-nav li.disabled { color: #a8a29e; cursor: not-allowed; }
+.sidebar-nav li.disabled:hover { background: transparent; color: #a8a29e; }
+.sidebar-nav li .ico { font-size: 14px; min-width: 28px; text-align: center; color: #a8a29e; }
+.sidebar-nav li.active .ico { color: #1c1917; }
+.sidebar-version { padding: 14px 16px; font-family: 'JasonHandwriting', cursive; font-size: 15px; color: #a8a29e; }
+
+/* ========== TOPBAR ========== */
+.breadcrumb { font-family: 'JasonHandwriting', cursive; font-size: 20px; color: #78716c; }
+.topbar-right { display: flex; align-items: center; gap: 20px; font-family: 'JasonHandwriting', cursive; font-size: 19px; }
+.notif-badge { position: relative; cursor: pointer; color: #78716c; display: inline-flex; align-items: center; }
+.notif-badge .badge { background: #ef4444; color: #fff; font-size: 12px; padding: 1px 5px; border-radius: 8px; position: absolute; top: -8px; right: -12px; }
+.user-info { color: #78716c; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+
+/* ========== TWO COLUMN LAYOUT ========== */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+/* ========== BUTTONS (no CSS border — rough.js draws it) ========== */
+.sketch-btn { padding: 6px 16px; font-family: 'JasonHandwriting', cursive; font-size: 18px; background: white; cursor: pointer; color: #1c1917; position: relative; border: none; transition: all 0.1s; }
+.sketch-btn:hover { transform: translate(-1px, -1px); }
+.sketch-btn-sm { padding: 4px 12px; font-size: 16px; }
+
+/* ========== BADGES (no CSS border — rough.js draws it) ========== */
+.sketch-badge { display: inline-flex; align-items: center; justify-content: center; padding: 2px 10px; font-family: 'JasonHandwriting', cursive; font-size: 16px; font-weight: 600; position: relative; }
+.sketch-badge > svg.rc-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0 !important; }
+.sketch-badge > span, .sketch-badge::after { position: relative; z-index: 2; }
+.sketch-badge-red { color: #ef4444; background: transparent; }
+.sketch-badge-amber { color: #92400e; background: transparent; }
+.sketch-badge-green { color: #166534; background: transparent; }
+.sketch-badge-blue { color: #1d4ed8; background: transparent; }
+.sketch-badge-muted { color: #78716c; background: transparent; }
+
+/* ========== TABLE (no CSS border — rough.js draws lines) ========== */
+.sketch-table { width: 100%; border-collapse: collapse; border-spacing: 0; position: relative; }
+.sketch-table th { font-family: 'JasonHandwriting', cursive; font-size: 17px; font-weight: 600; padding: 10px 14px; text-align: left; color: #78716c; background: #fafaf9; }
+.sketch-table td { padding: 10px 14px; font-size: 16px; }
+.sketch-table tr { cursor: pointer; }
+.sketch-table tbody tr:hover { background: #f5f5f4; }
+
+/* ========== FILTER / TAB BAR (no CSS border — rough.js draws underlines) ========== */
+.sketch-tabs { display: flex; gap: 0; margin-bottom: 20px; position: relative; }
+.sketch-tab { padding: 10px 20px; font-family: 'JasonHandwriting', cursive; font-size: 19px; cursor: pointer; color: #78716c; transition: all 0.15s; position: relative; }
+.sketch-tab:hover { color: #1c1917; }
+.sketch-tab.active { color: #1c1917; font-weight: 700; }
+
+/* ========== INPUT FIELD (no CSS border — rough.js draws it) ========== */
+.sketch-input { padding: 8px 12px; font-size: 16px; width: 100%; background: white; border: none; outline: none; position: relative; }
+
+/* ========== INCIDENT LIST ITEMS ========== */
+.incident-item { padding: 12px 16px; cursor: pointer; font-size: 16px; display: flex; gap: 10px; align-items: baseline; position: relative; }
+.incident-item:hover { background: rgba(0,0,0,0.03); }
+.incident-meta { color: #78716c; font-size: 13px; margin-left: auto; white-space: nowrap; font-family: 'JasonHandwriting', cursive; font-size: 16px; }
+.view-all-link { display: block; padding: 12px 16px; text-align: center; font-family: 'JasonHandwriting', cursive; font-size: 18px; color: #78716c; cursor: pointer; }
+.view-all-link:hover { background: rgba(0,0,0,0.03); color: #1c1917; }
+
+/* ========== HEALTH LIST ========== */
+.health-item { padding: 10px 16px; font-size: 14px; display: flex; gap: 10px; align-items: center; }
+.health-more { padding: 10px 16px; font-family: 'JasonHandwriting', cursive; font-size: 16px; color: #78716c; }
+
+/* ========== AI BRIEF ========== */
+.ai-brief-actions { display: flex; gap: 12px; margin-top: 16px; }
+
+/* ========== DETAIL PAGE ========== */
+.detail-title { font-family: 'JasonHandwriting', cursive; font-size: 28px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.detail-meta { font-size: 14px; color: #78716c; margin-bottom: 16px; }
+.detail-actions { display: flex; gap: 12px; }
+
+/* ========== TAB CONTENT ========== */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ========== AI SECTION ========== */
+.ai-section { background: #fafaf9; padding: 16px 20px; margin-bottom: 14px; position: relative; }
+.ai-section-title { font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 20px; margin-bottom: 10px; color: #1c1917; }
+.ai-section p, .ai-section li { font-size: 14px; line-height: 1.8; color: #1c1917; }
+.ai-section ol, .ai-section ul { padding-left: 24px; }
+.ai-section li { margin-bottom: 6px; }
+
+/* ========== TIMELINE ========== */
+.timeline { padding: 0 0 0 24px; margin-left: 16px; position: relative; }
+.timeline-entry { padding: 0 0 24px 20px; position: relative; }
+.timeline-entry::before { content: ''; width: 12px; height: 12px; border: 2px solid #a8a29e; border-radius: 50%; background: #fff; position: absolute; left: -31px; top: 2px; }
+.timeline-entry:last-child { padding-bottom: 0; }
+.timeline-time { font-family: 'JasonHandwriting', cursive; font-size: 17px; color: #78716c; font-weight: 600; }
+.timeline-text { font-size: 14px; margin-top: 4px; line-height: 1.6; }
+
+/* ========== LOG ENTRIES ========== */
+.log-entry { font-family: 'Courier New', monospace; font-size: 12px; padding: 8px 14px; line-height: 1.6; background: #fff; }
+.log-entry:nth-child(even) { background: #fafaf9; }
+.log-container { overflow: hidden; position: relative; }
+
+/* ========== COMMENTS ========== */
+.comment { padding: 16px 20px; margin-bottom: 12px; background: #fff; position: relative; }
+.comment-author { font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 19px; }
+.comment-time { font-family: 'JasonHandwriting', cursive; font-size: 16px; color: #78716c; margin-left: 10px; }
+.comment-text { font-size: 14px; margin-top: 8px; line-height: 1.6; }
+
+/* ========== AI COPILOT PANEL ========== */
+.copilot-overlay { position: fixed; top: 0; right: -420px; width: 380px; height: 100vh; background: #fff; display: flex; flex-direction: column; transition: right 0.2s ease; z-index: 100; }
+.copilot-overlay.open { right: 0; }
+.copilot-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 22px; position: relative; }
+.copilot-close { cursor: pointer; font-family: 'JasonHandwriting', cursive; font-size: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #fff; transition: all 0.1s; position: relative; }
+.copilot-close:hover { background: rgba(0,0,0,0.03); }
+.copilot-quick { padding: 14px 20px; display: flex; gap: 8px; flex-wrap: wrap; position: relative; }
+.copilot-chat { flex: 1; overflow-y: auto; padding: 20px; }
+.chat-msg { margin-bottom: 18px; }
+.chat-msg.user .chat-label { font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 17px; margin-bottom: 6px; color: #1c1917; }
+.chat-msg.ai .chat-label { font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 17px; color: #78716c; margin-bottom: 6px; }
+.chat-bubble { padding: 12px 16px; font-size: 14px; line-height: 1.7; position: relative; }
+.chat-msg.user .chat-bubble { background: #f5f5f4; }
+.chat-msg.ai .chat-bubble { background: #fff; }
+.chat-device-box { padding: 10px; margin-top: 8px; font-family: 'Courier New', monospace; font-size: 13px; background: #fafaf9; position: relative; }
+.copilot-input { padding: 14px 20px; display: flex; gap: 12px; position: relative; }
+
+/* ========== FLOATING AI BUTTON ========== */
+.ai-fab { position: fixed; bottom: 28px; right: 28px; width: 52px; height: 52px; background: #fff; cursor: pointer; font-family: 'JasonHandwriting', cursive; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; z-index: 90; transition: all 0.15s; color: #1c1917; border: none; border-radius: 50%; }
+.ai-fab:hover { transform: translate(-1px, -1px); }
+
+/* ========== BACK LINK ========== */
+.back-link { font-family: 'JasonHandwriting', cursive; font-size: 19px; color: #78716c; cursor: pointer; margin-bottom: 16px; display: inline-block; transition: color 0.1s; }
+.back-link:hover { color: #1c1917; }
+
+/* ========== PAGE VISIBILITY ========== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ========== REPORT CARDS ========== */
+.report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+.report-card { background: #fff; padding: 20px; cursor: pointer; transition: all 0.15s; position: relative; }
+.report-card:hover { transform: translate(-1px, -1px); }
+.report-card-title { font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 22px; margin-bottom: 6px; color: #1c1917; }
+.report-card-meta { font-family: 'JasonHandwriting', cursive; font-size: 15px; color: #78716c; margin-bottom: 10px; }
+.report-card-desc { font-size: 13px; color: #78716c; line-height: 1.6; }
+
+/* ========== SETTINGS ========== */
+.settings-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; font-size: 14px; position: relative; }
+.settings-label { font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 19px; color: #1c1917; }
+.settings-value { color: #78716c; font-size: 13px; }
+.settings-status-ok { font-family: 'JasonHandwriting', cursive; font-size: 16px; font-weight: 600; color: #22c55e; }
+.settings-status-off { font-family: 'JasonHandwriting', cursive; font-size: 16px; font-weight: 600; color: #78716c; }
+
+/* ========== FUTURE FEATURE MARKER ========== */
+.future-tag { display: inline-block; font-family: 'JasonHandwriting', cursive; font-size: 15px; color: #a8a29e; padding: 2px 8px; margin-left: 6px; position: relative; }
+
+/* ========== PAGE TITLE ========== */
+.page-title { font-family: 'JasonHandwriting', cursive; font-size: 30px; font-weight: 700; margin-bottom: 20px; color: #1c1917; }
+
+/* ========== SETTINGS TAB CONTENT ========== */
+.settings-tab-content { display: none; }
+.settings-tab-content.active { display: block; }
+
+/* ========== RULE TABLE ========== */
+.rule-table { width: 100%; border-collapse: collapse; border-spacing: 0; position: relative; }
+.rule-table th { font-family: 'JasonHandwriting', cursive; font-size: 17px; font-weight: 600; padding: 10px 14px; text-align: left; color: #78716c; background: #fafaf9; }
+.rule-table td { padding: 10px 14px; font-size: 14px; }
+
+/* ========== INNER LIST WRAPPER (for incident list / health list) ========== */
+.inner-list-wrapper { position: relative; overflow: hidden; }
+
+/* ========== INPUT WRAPPER ========== */
+.input-wrapper { position: relative; display: inline-block; }
+.input-wrapper .sketch-input { position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+
+<!-- watermark removed — version shown in sidebar only -->
+
+<div class="app">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar-el">
+    <div class="sidebar-logo">[N] Arova Nexus <span>MVP</span></div>
+    <ul class="sidebar-nav">
+      <li class="active" data-page="dashboard"><svg class="nav-icon" data-icon="home" viewBox="0 0 24 24" width="20" height="20"></svg> Dashboard</li>
+      <li data-page="incidents"><svg class="nav-icon" data-icon="alert-triangle" viewBox="0 0 24 24" width="20" height="20"></svg> 事件管理</li>
+      <li data-page="reports"><svg class="nav-icon" data-icon="bar-chart" viewBox="0 0 24 24" width="20" height="20"></svg> 分析報表</li>
+      <li data-page="devices"><svg class="nav-icon" data-icon="server" viewBox="0 0 24 24" width="20" height="20"></svg> 設備概覽</li>
+      <li data-page="settings"><svg class="nav-icon" data-icon="settings" viewBox="0 0 24 24" width="20" height="20"></svg> 設定</li>
+    </ul>
+    <div class="sidebar-version">v0.1.0-alpha wireframe</div>
+  </aside>
+
+  <!-- ========== MAIN AREA ========== -->
+  <div class="main-area">
+
+    <!-- ========== TOPBAR ========== -->
+    <header class="topbar" id="topbar-el">
+      <div class="breadcrumb" id="breadcrumb">Dashboard</div>
+      <div class="topbar-right">
+        <span class="notif-badge"><svg class="nav-icon topbar-icon" data-icon="bell" viewBox="0 0 24 24" width="22" height="22" style="vertical-align:middle;"></svg><span class="badge">3</span></span>
+        <span class="user-info"><svg class="nav-icon topbar-icon" data-icon="user" viewBox="0 0 24 24" width="22" height="22" style="vertical-align:middle;"></svg> Kyle</span>
+      </div>
+    </header>
+
+    <!-- ========== CONTENT ========== -->
+    <div class="content">
+
+      <!-- ================================================ -->
+      <!-- PAGE 1: Dashboard                                 -->
+      <!-- ================================================ -->
+      <div class="page active" id="page-dashboard">
+
+        <!-- ---- KPI Row ---- -->
+        <div class="sketch-card" data-rough="card">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">1</span> KPI 概覽</div>
+          <div class="grid grid-cols-4 gap-5 mb-4">
+            <div class="sketch-kpi" data-rough="kpi">
+              <div class="sketch-kpi-label">活躍告警</div>
+              <div class="sketch-kpi-value">3</div>
+              <div class="sketch-kpi-delta">&#8593; +2</div>
+            </div>
+            <div class="sketch-kpi" data-rough="kpi">
+              <div class="sketch-kpi-label">設備在線</div>
+              <div class="sketch-kpi-value">40/40</div>
+              <div class="sketch-kpi-delta">全部正常</div>
+            </div>
+            <div class="sketch-kpi" data-rough="kpi">
+              <div class="sketch-kpi-label">今日 Deny</div>
+              <div class="sketch-kpi-value">1,247</div>
+              <div class="sketch-kpi-delta">&#8595; -15%</div>
+            </div>
+            <div class="sketch-kpi" data-rough="kpi">
+              <div class="sketch-kpi-label">平均 MTTR</div>
+              <div class="sketch-kpi-value">12 min</div>
+              <div class="sketch-kpi-delta">&#8595; -3 min</div>
+            </div>
+          </div>
+          <div class="text-right"><span class="sketch-anno">&larr; 點擊數字跳轉對應頁面</span></div>
+        </div>
+
+        <!-- ---- Two Columns ---- -->
+        <div class="two-col">
+
+          <!-- Left: Pending Incidents -->
+          <div class="sketch-card" data-rough="card" style="margin-bottom: 0;">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">2</span> 待處理事件</div>
+            <div class="inner-list-wrapper" data-rough="card">
+              <div class="incident-item" data-goto="detail" data-rough="list-row">
+                <span class="sketch-badge sketch-badge-red" data-rough="badge" data-rough-color="#ef4444"><span style="position:relative;z-index:2">SEV1</span></span>
+                <span>PA-450 大量 Deny 爆發</span>
+                <span class="incident-meta">10 分鐘前 · 未確認</span>
+              </div>
+              <div class="incident-item" data-goto="detail-generic" data-rough="list-row">
+                <span class="sketch-badge sketch-badge-amber" data-rough="badge" data-rough-color="#f59e0b"><span style="position:relative;z-index:2">SEV2</span></span>
+                <span>TH-DCVer1 磁碟使用率 87%</span>
+                <span class="incident-meta">2 小時前 · 已確認</span>
+              </div>
+              <div class="incident-item" data-goto="detail-generic" data-rough="list-row">
+                <span class="sketch-badge sketch-badge-muted" data-rough="badge" data-rough-color="#d6d3d1"><span style="position:relative;z-index:2">SEV3</span></span>
+                <span>ESXi-01 CPU 使用率 82%</span>
+                <span class="incident-meta">3 小時前 · 調查中</span>
+              </div>
+              <div class="incident-item" data-goto="detail-generic" data-rough="list-row">
+                <span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">SEV4</span></span>
+                <span>Aruba 6200 Port flapping</span>
+                <span class="incident-meta">昨天 · 已解決</span>
+              </div>
+              <div class="incident-item" data-goto="detail-generic" data-rough="list-row">
+                <span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">SEV4</span></span>
+                <span>iDRAC 硬體警告</span>
+                <span class="incident-meta">昨天 · 已解決</span>
+              </div>
+              <div class="view-all-link" id="view-all-incidents">查看全部事件 &rarr;</div>
+            </div>
+            <div class="mt-3"><span class="sketch-anno">&larr; 點擊進入詳情</span></div>
+          </div>
+
+          <!-- Right: System Health -->
+          <div class="sketch-card" data-rough="card" style="margin-bottom: 0;">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">3</span> 系統健康</div>
+            <div class="inner-list-wrapper" data-rough="card">
+              <div class="health-item" data-rough="list-row"><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e" style="min-width: 40px; text-align: center;"><span style="position:relative;z-index:2">OK</span></span> PA-450 — 正常</div>
+              <div class="health-item" data-rough="list-row"><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e" style="min-width: 40px; text-align: center;"><span style="position:relative;z-index:2">OK</span></span> TH-DCVer1 — 正常</div>
+              <div class="health-item" data-rough="list-row"><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e" style="min-width: 40px; text-align: center;"><span style="position:relative;z-index:2">OK</span></span> TH-DCVer2 — 正常</div>
+              <div class="health-item" data-rough="list-row"><span class="sketch-badge sketch-badge-amber" data-rough="badge" data-rough-color="#f59e0b" style="min-width: 48px; text-align: center;"><span style="position:relative;z-index:2">WARN</span></span> ESXi-01 — CPU 82%</div>
+              <div class="health-item" data-rough="list-row"><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e" style="min-width: 40px; text-align: center;"><span style="position:relative;z-index:2">OK</span></span> Aruba 6200 — 正常</div>
+              <div class="health-more">... 更多 (40台)</div>
+            </div>
+            <div class="mt-3"><span class="sketch-anno">&darr; LibreNMS API 每 5 分鐘更新</span></div>
+          </div>
+        </div>
+
+        <!-- ---- AI Daily Brief ---- -->
+        <div class="sketch-card" data-rough="card" style="margin-top: 24px;">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">4</span> AI 每日簡報</div>
+          <div class="mb-2" style="font-family: 'JasonHandwriting', cursive; font-size: 17px; color: #78716c;">今日 AI 資安簡報 (08:00 自動產出)</div>
+          <p class="mb-3" style="line-height: 1.8;">1. 防火牆 PA-450 於 09:15 偵測到異常 Deny 流量爆發，來源 IP 集中於 10.20.30.0/24 網段，疑似內部設備遭感染或設定異常。建議優先排查該網段設備。</p>
+          <p class="mb-3" style="line-height: 1.8;">2. AD 伺服器 TH-DCVer1 磁碟使用率持續上升至 87%，預估 7 天內將達 95% 警戒線。建議安排磁碟清理或擴充作業。</p>
+          <p class="mb-4" style="line-height: 1.8;">3. 過去 24 小時共 40 台設備全數在線，無設備離線事件。整體網路健康度良好。</p>
+          <div class="ai-brief-actions">
+            <button class="sketch-btn" data-rough="btn">下載 PDF</button>
+            <button class="sketch-btn" data-rough="btn" onclick="toggleCopilot()">在 AI Copilot 繼續分析</button>
+          </div>
+          <div class="mt-3 text-right"><span class="sketch-anno">&uarr; 觸發 AI Copilot</span></div>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PAGE 2: Incident List                             -->
+      <!-- ================================================ -->
+      <div class="page" id="page-incidents">
+
+        <div class="sketch-card" data-rough="card">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">5</span> 篩選</div>
+          <div class="sketch-tabs" id="incident-filter" data-rough="tab-bar">
+            <div class="sketch-tab active">全部 (8)</div>
+            <div class="sketch-tab">未確認 (1)</div>
+            <div class="sketch-tab">調查中 (2)</div>
+            <div class="sketch-tab">已解決 (5)</div>
+          </div>
+          <div style="margin-top: -12px;"><span class="sketch-anno">&larr; 切換篩選條件</span></div>
+        </div>
+
+        <div class="sketch-card" data-rough="card">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">6</span> 事件列表</div>
+          <div data-rough="table-wrapper">
+            <table class="sketch-table" data-rough="table">
+              <thead>
+                <tr>
+                  <th style="width:80px">嚴重度</th>
+                  <th>標題</th>
+                  <th style="width:100px">來源</th>
+                  <th style="width:80px">狀態</th>
+                  <th style="width:80px">處理人</th>
+                  <th style="width:80px">持續時間</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-goto="detail">
+                  <td><span class="sketch-badge sketch-badge-red" data-rough="badge" data-rough-color="#ef4444"><span style="position:relative;z-index:2">SEV1</span></span></td>
+                  <td>PA-450 大量 Deny 爆發</td>
+                  <td>LibreNMS</td>
+                  <td>未確認</td>
+                  <td>—</td>
+                  <td>12 min</td>
+                </tr>
+                <tr data-goto="detail-generic">
+                  <td><span class="sketch-badge sketch-badge-amber" data-rough="badge" data-rough-color="#f59e0b"><span style="position:relative;z-index:2">SEV2</span></span></td>
+                  <td>TH-DCVer1 磁碟使用率 87%</td>
+                  <td>LibreNMS</td>
+                  <td>已確認</td>
+                  <td>Vincent</td>
+                  <td>2 hr</td>
+                </tr>
+                <tr data-goto="detail-generic">
+                  <td><span class="sketch-badge sketch-badge-muted" data-rough="badge" data-rough-color="#d6d3d1"><span style="position:relative;z-index:2">SEV3</span></span></td>
+                  <td>ESXi-01 CPU 使用率 82%</td>
+                  <td>LibreNMS</td>
+                  <td>調查中</td>
+                  <td>Kyle</td>
+                  <td>3 hr</td>
+                </tr>
+                <tr data-goto="detail-generic">
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">SEV4</span></span></td>
+                  <td>Aruba 6200 Port 10 flapping</td>
+                  <td>LibreNMS</td>
+                  <td>已解決</td>
+                  <td>Vincent</td>
+                  <td>6 hr</td>
+                </tr>
+                <tr data-goto="detail-generic">
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">SEV4</span></span></td>
+                  <td>iDRAC 硬體警告 — Fan redundancy lost</td>
+                  <td>Graylog</td>
+                  <td>已解決</td>
+                  <td>Kyle</td>
+                  <td>1 day</td>
+                </tr>
+                <tr data-goto="detail-generic">
+                  <td><span class="sketch-badge sketch-badge-muted" data-rough="badge" data-rough-color="#d6d3d1"><span style="position:relative;z-index:2">SEV3</span></span></td>
+                  <td>AD 登入失敗次數異常 (TH-DCVer2)</td>
+                  <td>Graylog</td>
+                  <td>調查中</td>
+                  <td>Kyle</td>
+                  <td>4 hr</td>
+                </tr>
+                <tr data-goto="detail-generic">
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">SEV4</span></span></td>
+                  <td>FortiSwitch PoE 功率超過 80%</td>
+                  <td>LibreNMS</td>
+                  <td>已解決</td>
+                  <td>Vincent</td>
+                  <td>2 day</td>
+                </tr>
+                <tr data-goto="detail-generic">
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">SEV4</span></span></td>
+                  <td>Graylog 索引磁碟用量偏高</td>
+                  <td>Graylog</td>
+                  <td>已解決</td>
+                  <td>Kyle</td>
+                  <td>3 day</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-3"><span class="sketch-anno">&larr; 點擊列進入事件詳情</span></div>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PAGE 3: Incident Detail                           -->
+      <!-- ================================================ -->
+      <div class="page" id="page-detail">
+        <span class="back-link" id="back-to-list">&lt; 返回事件列表</span>
+
+        <!-- ---- Event Header ---- -->
+        <div class="sketch-card" data-rough="card">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">7</span> 事件標頭</div>
+          <div class="detail-title"><span class="sketch-badge sketch-badge-red" data-rough="badge" data-rough-color="#ef4444"><span style="position:relative;z-index:2">SEV1</span></span> PA-450 大量 Deny 爆發</div>
+          <div class="detail-meta">INC-001 · 觸發時間: 2026-03-26 09:15 · 持續: 12 分鐘 · 處理人: Vincent</div>
+          <div class="detail-actions">
+            <button class="sketch-btn" data-rough="btn">確認</button>
+            <button class="sketch-btn" data-rough="btn">升級</button>
+            <button class="sketch-btn" data-rough="btn">解決</button>
+            <button class="sketch-btn" data-rough="btn">誤報關閉</button>
+          </div>
+          <div class="mt-3"><span class="sketch-anno">&larr; 動作按鈕改變事件狀態</span></div>
+        </div>
+
+        <!-- ---- Detail Tabs ---- -->
+        <div class="sketch-tabs" id="detail-tabs" data-rough="tab-bar">
+          <div class="sketch-tab active" data-tab="tab-ai">AI 摘要</div>
+          <div class="sketch-tab" data-tab="tab-timeline">時間軸</div>
+          <div class="sketch-tab" data-tab="tab-logs">Log 分析</div>
+          <div class="sketch-tab" data-tab="tab-comments">留言</div>
+        </div>
+
+        <!-- Tab: AI Summary -->
+        <div class="tab-content active" id="tab-ai">
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">8</span> AI 摘要</div>
+
+            <div class="ai-section" data-rough="ai-section">
+              <div class="ai-section-title">[摘要]</div>
+              <p>PA-450 防火牆於 09:15 開始出現大量 Deny 記錄，10 分鐘內累計 487 筆。來源 IP 集中於內部網段 10.20.30.0/24，目標以外部 443/tcp 與 80/tcp 為主，觸發 threat-prevention 規則。</p>
+            </div>
+            <div class="ai-section" data-rough="ai-section">
+              <div class="ai-section-title">[可能原因]</div>
+              <ol>
+                <li>10.20.30.0/24 網段內部設備遭惡意程式感染，嘗試大量對外連線</li>
+                <li>近期防火牆政策異動導致合法流量被誤擋</li>
+                <li>使用者端瀏覽器外掛或軟體產生異常連線行為</li>
+              </ol>
+            </div>
+            <div class="ai-section" data-rough="ai-section">
+              <div class="ai-section-title">[建議行動]</div>
+              <ol>
+                <li>立即確認 10.20.30.0/24 網段內發起連線的主要 IP，查明對應設備與使用者</li>
+                <li>於 Graylog 檢視詳細 Deny log，確認是否有特定 threat-id 或目標 domain</li>
+                <li>比對近 7 日防火牆政策變更記錄，排除設定異動造成的誤擋</li>
+                <li>如確認為惡意行為，將相關設備隔離並通報資安事件</li>
+              </ol>
+            </div>
+            <div class="ai-section" data-rough="ai-section">
+              <div class="ai-section-title">[相似歷史事件]</div>
+              <p>無相似歷史記錄（系統初次部署）</p>
+            </div>
+            <button class="sketch-btn mt-3" data-rough="btn" onclick="toggleCopilot()">在 AI Copilot 繼續分析</button>
+            <span class="sketch-anno ml-3">&rarr; 開啟 AI Copilot 面板</span>
+          </div>
+        </div>
+
+        <!-- Tab: Timeline -->
+        <div class="tab-content" id="tab-timeline">
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">9</span> 時間軸</div>
+            <div class="timeline" data-rough="timeline">
+              <div class="timeline-entry">
+                <div class="timeline-time">09:15:00</div>
+                <div class="timeline-text">LibreNMS 偵測到 PA-450 deny 計數急遽上升，觸發告警</div>
+              </div>
+              <div class="timeline-entry">
+                <div class="timeline-time">09:16:12</div>
+                <div class="timeline-text">Arova Nexus 自動建立事件 INC-001，嚴重度判定 SEV1</div>
+              </div>
+              <div class="timeline-entry">
+                <div class="timeline-time">09:17:30</div>
+                <div class="timeline-text">AI 引擎完成初步分析，產出摘要與建議行動</div>
+              </div>
+              <div class="timeline-entry">
+                <div class="timeline-time">09:20:45</div>
+                <div class="timeline-text">通知已發送至 Teams 頻道 #soc-alerts</div>
+              </div>
+              <div class="timeline-entry">
+                <div class="timeline-time">09:27:00</div>
+                <div class="timeline-text">Vincent 確認接手處理，狀態更新為「調查中」</div>
+              </div>
+            </div>
+            <div class="mt-4"><span class="sketch-anno">&darr; 每 60 秒自動更新</span></div>
+          </div>
+        </div>
+
+        <!-- Tab: Log Analysis -->
+        <div class="tab-content" id="tab-logs">
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">10</span> Log 分析</div>
+            <div class="flex gap-3 mb-4">
+              <div class="input-wrapper flex-1" data-rough="input">
+                <input class="sketch-input" type="text" value="source:PA-450 AND action:deny" readonly>
+              </div>
+              <button class="sketch-btn" data-rough="btn">查詢</button>
+              <button class="sketch-btn sketch-btn-sm" data-rough="btn">最近 1 小時</button>
+            </div>
+            <div class="log-container" data-rough="card">
+              <div class="log-entry">2026-03-26 09:27:01 PA-450 DENY src=10.20.30.15 dst=142.250.80.46 dport=443 rule="block-suspicious" threat-id=41003</div>
+              <div class="log-entry">2026-03-26 09:26:44 PA-450 DENY src=10.20.30.15 dst=142.250.80.46 dport=443 rule="block-suspicious" threat-id=41003</div>
+              <div class="log-entry">2026-03-26 09:25:58 PA-450 DENY src=10.20.30.22 dst=104.18.32.7 dport=80 rule="block-suspicious" threat-id=38012</div>
+              <div class="log-entry">2026-03-26 09:25:11 PA-450 DENY src=10.20.30.15 dst=172.217.14.99 dport=443 rule="block-suspicious" threat-id=41003</div>
+              <div class="log-entry">2026-03-26 09:24:33 PA-450 DENY src=10.20.30.8 dst=93.184.216.34 dport=80 rule="outbound-policy" threat-id=none</div>
+            </div>
+            <div class="py-3 text-center" style="font-family: 'JasonHandwriting', cursive; font-size: 16px; color: #78716c;">顯示 5 / 487 筆 · 載入更多...</div>
+          </div>
+        </div>
+
+        <!-- Tab: Comments -->
+        <div class="tab-content" id="tab-comments">
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">11</span> 留言</div>
+            <div class="comment" data-rough="comment">
+              <span class="comment-author">Vincent</span>
+              <span class="comment-time">09:28</span>
+              <div class="comment-text">已開始排查 10.20.30.15，這台是 Marketing 部門的工作站。初步看起來像是某個 Chrome 外掛在大量發送請求。</div>
+            </div>
+            <div class="comment" data-rough="comment">
+              <span class="comment-author">Kyle</span>
+              <span class="comment-time">09:32</span>
+              <div class="comment-text">收到，我這邊先確認防火牆規則最近有沒有異動。如果確定是外掛問題就先把那台隔離。</div>
+            </div>
+            <div class="flex gap-3 mt-4">
+              <div class="input-wrapper flex-1" data-rough="input">
+                <input class="sketch-input" type="text" placeholder="輸入留言...">
+              </div>
+              <button class="sketch-btn" data-rough="btn">送出</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PAGE 4: Reports                                   -->
+      <!-- ================================================ -->
+      <div class="page" id="page-reports">
+        <div class="page-title">分析報表</div>
+
+        <!-- ---- Report Cards ---- -->
+        <div class="sketch-card" data-rough="card">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">12</span> 報表卡片</div>
+          <div class="report-grid">
+            <div class="report-card" data-rough="card">
+              <div class="report-card-title">每日資安簡報</div>
+              <div class="report-card-meta">每天 08:00 自動產出 · 最近: 2026-03-26</div>
+              <div class="report-card-desc">防火牆摘要、AD 登入統計、告警彙整、設備健康</div>
+              <div class="flex gap-2 mt-3">
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">下載 PDF</button>
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">檢視</button>
+              </div>
+            </div>
+            <div class="report-card" data-rough="card">
+              <div class="report-card-title">設備健康巡檢</div>
+              <div class="report-card-meta">每天 08:30 自動產出 · 最近: 2026-03-26</div>
+              <div class="report-card-desc">所有設備 CPU/Memory/Disk 狀態，異常設備優先標示</div>
+              <div class="flex gap-2 mt-3">
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">下載 PDF</button>
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">檢視</button>
+              </div>
+            </div>
+            <div class="report-card" data-rough="card">
+              <div class="report-card-title">每週分析報告</div>
+              <div class="report-card-meta">每週一 09:00 自動產出 · 最近: 2026-03-24</div>
+              <div class="report-card-desc">防火牆趨勢、AD 安全分析、設備可用率、建議行動</div>
+              <div class="flex gap-2 mt-3">
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">下載 PDF</button>
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">檢視</button>
+              </div>
+            </div>
+            <div class="report-card" data-rough="card">
+              <div class="report-card-title">月度資安報告</div>
+              <div class="report-card-meta">每月 3 日自動產出 · 最近: 2026-03-03</div>
+              <div class="report-card-desc">完整月度資安報告：防火牆、帳戶安全、基礎架構、KPI</div>
+              <div class="flex gap-2 mt-3">
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">下載 PDF</button>
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">檢視</button>
+              </div>
+            </div>
+            <div class="report-card" data-rough="card">
+              <div class="report-card-title">設備診斷報告</div>
+              <div class="report-card-meta">手動觸發 · 最近: 2026-03-26 (TH-DCVer1)</div>
+              <div class="report-card-desc">單台設備深度診斷：效能、問題發現、修復步驟</div>
+              <div class="flex gap-2 mt-3">
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">下載 PDF</button>
+                <button class="sketch-btn sketch-btn-sm" data-rough="btn">產出新報告</button>
+              </div>
+            </div>
+            <div class="report-card" data-rough="card-dashed" style="display: flex; align-items: center; justify-content: center; color: #a8a29e;">
+              <div class="text-center">
+                <div style="font-family: 'JasonHandwriting', cursive; font-size: 36px; margin-bottom: 8px;">+</div>
+                <div style="font-family: 'JasonHandwriting', cursive; font-size: 18px;">自訂報表</div>
+                <span class="future-tag" data-rough="future-tag">[v0.3]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Recent Reports ---- -->
+        <div class="sketch-card" data-rough="card">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">13</span> 歷史報表</div>
+          <div data-rough="table-wrapper">
+            <table class="sketch-table" data-rough="table">
+              <thead>
+                <tr><th>日期</th><th>報表名稱</th><th>類型</th><th>觸發方式</th><th>操作</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>2026-03-26 08:00</td><td>每日資安簡報</td><td>每日</td><td>自動</td><td><button class="sketch-btn sketch-btn-sm" data-rough="btn">PDF</button></td></tr>
+                <tr><td>2026-03-26 08:30</td><td>設備健康巡檢</td><td>每日</td><td>自動</td><td><button class="sketch-btn sketch-btn-sm" data-rough="btn">PDF</button></td></tr>
+                <tr><td>2026-03-26 09:30</td><td>TH-DCVer1 診斷報告</td><td>診斷</td><td>手動</td><td><button class="sketch-btn sketch-btn-sm" data-rough="btn">PDF</button></td></tr>
+                <tr><td>2026-03-25 08:00</td><td>每日資安簡報</td><td>每日</td><td>自動</td><td><button class="sketch-btn sketch-btn-sm" data-rough="btn">PDF</button></td></tr>
+                <tr><td>2026-03-24 09:00</td><td>每週分析報告 (W13)</td><td>每週</td><td>自動</td><td><button class="sketch-btn sketch-btn-sm" data-rough="btn">PDF</button></td></tr>
+                <tr><td>2026-03-03 09:00</td><td>2月 月度資安報告</td><td>每月</td><td>自動</td><td><button class="sketch-btn sketch-btn-sm" data-rough="btn">PDF</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PAGE 5: Devices                                   -->
+      <!-- ================================================ -->
+      <div class="page" id="page-devices">
+        <div class="page-title">設備概覽</div>
+
+        <!-- ---- Device Stats ---- -->
+        <div class="sketch-card" data-rough="card">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">14</span> 設備統計</div>
+          <div class="grid grid-cols-5 gap-4 mb-4">
+            <div class="sketch-kpi" data-rough="kpi"><div class="sketch-kpi-label">全部設備</div><div class="sketch-kpi-value">40</div></div>
+            <div class="sketch-kpi" data-rough="kpi"><div class="sketch-kpi-label">[OK] 在線</div><div class="sketch-kpi-value">38</div></div>
+            <div class="sketch-kpi" data-rough="kpi"><div class="sketch-kpi-label">[WARN] 警告</div><div class="sketch-kpi-value">2</div></div>
+            <div class="sketch-kpi" data-rough="kpi"><div class="sketch-kpi-label">[DOWN] 離線</div><div class="sketch-kpi-value">0</div></div>
+            <div class="sketch-kpi" data-rough="kpi"><div class="sketch-kpi-label">資料來源</div><div class="sketch-kpi-value" style="font-size: 18px;">LibreNMS</div></div>
+          </div>
+          <div class="text-right"><span class="sketch-anno">&darr; LibreNMS API 每小時同步</span></div>
+        </div>
+
+        <!-- ---- Device List ---- -->
+        <div class="sketch-card" data-rough="card">
+          <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">15</span> 設備列表</div>
+
+          <!-- Filter bar -->
+          <div class="sketch-tabs" id="device-filter" data-rough="tab-bar">
+            <div class="sketch-tab active">全部 (40)</div>
+            <div class="sketch-tab">Server (15)</div>
+            <div class="sketch-tab">Network (12)</div>
+            <div class="sketch-tab">iDRAC (5)</div>
+            <div class="sketch-tab">ESXi (5)</div>
+            <div class="sketch-tab">Other (3)</div>
+          </div>
+
+          <!-- Device table -->
+          <div data-rough="table-wrapper">
+            <table class="sketch-table" data-rough="table">
+              <thead>
+                <tr><th>狀態</th><th>設備名稱</th><th>IP</th><th>類型</th><th>OS</th><th>CPU</th><th>Memory</th><th>Disk</th><th>Uptime</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-amber" data-rough="badge" data-rough-color="#f59e0b"><span style="position:relative;z-index:2">WARN</span></span></td>
+                  <td>ESXi-01 (localhost)</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.92.12</td><td>Server</td><td>VMware ESXi</td>
+                  <td style="font-weight: bold;">82%</td><td>65%</td><td>48%</td><td>23d 5h</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-amber" data-rough="badge" data-rough-color="#f59e0b"><span style="position:relative;z-index:2">WARN</span></span></td>
+                  <td>mes-db-2</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.92.115</td><td>Server</td><td>Windows Server</td>
+                  <td>45%</td><td>72%</td><td style="font-weight: bold;">87%</td><td>14d 2h</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">OK</span></span></td>
+                  <td>PA-450</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.92.254</td><td>Network</td><td>PAN-OS</td>
+                  <td>32%</td><td>45%</td><td>—</td><td>45d 12h</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">OK</span></span></td>
+                  <td>th-dcver1</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.92.5</td><td>Server</td><td>Windows 2016</td>
+                  <td>—</td><td>—</td><td>—</td><td>14d 2h</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">OK</span></span></td>
+                  <td>th-dcver2</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.92.6</td><td>Server</td><td>Windows 2016</td>
+                  <td>—</td><td>—</td><td>—</td><td>14d 2h</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">OK</span></span></td>
+                  <td>6200</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.91.253</td><td>Network</td><td>ArubaOS-CX</td>
+                  <td>18%</td><td>32%</td><td>—</td><td>60d 8h</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">OK</span></span></td>
+                  <td>hpe5710</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.91.252</td><td>Network</td><td>Comware</td>
+                  <td>12%</td><td>28%</td><td>—</td><td>90d 3h</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">OK</span></span></td>
+                  <td>idrac-cpwjjf3</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.92.11</td><td>iDRAC</td><td>DRAC</td>
+                  <td>—</td><td>—</td><td>—</td><td>120d</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">OK</span></span></td>
+                  <td>ewaiomni</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.92.200</td><td>Server</td><td>Ubuntu 22.04</td>
+                  <td>15%</td><td>42%</td><td>19%</td><td>30d 4h</td>
+                </tr>
+                <tr>
+                  <td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">OK</span></span></td>
+                  <td>graylog</td><td style="font-family: 'Courier New', monospace; font-size: 13px;">10.20.92.201</td><td>Server</td><td>Ubuntu 22.04</td>
+                  <td>35%</td><td>68%</td><td>9%</td><td>30d 4h</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="py-3 text-center" style="font-family: 'JasonHandwriting', cursive; font-size: 16px; color: #78716c;">顯示 10 / 40 台 · 最後同步: 2026-03-26 09:25 (LibreNMS API)</div>
+        </div>
+
+        <!-- ---- SNMP Note ---- -->
+        <div class="sketch-card" data-rough="card-dashed">
+          <div class="sketch-card-title" style="color: #78716c;">[!] SNMP 設定提醒</div>
+          <p style="line-height: 1.7; color: #78716c;">
+            th-dcver1, th-dcver2 等 Windows 設備缺少 CPU/Memory/Disk 資料。<br>
+            原因：Windows SNMP Service Agent Tab 未全部勾選。<br>
+            <span style="cursor: pointer; color: #0ea5e9; font-family: 'JasonHandwriting', cursive; font-size: 17px;">查看 TH-DCVer1 診斷報告 &rarr;</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PAGE 6: Settings                                  -->
+      <!-- ================================================ -->
+      <div class="page" id="page-settings">
+        <div class="page-title">設定</div>
+
+        <!-- Settings sub-tabs -->
+        <div class="sketch-tabs" id="settings-tabs" data-rough="tab-bar">
+          <div class="sketch-tab active" data-stab="tab-integration">整合管理</div>
+          <div class="sketch-tab" data-stab="tab-notification">通知設定</div>
+          <div class="sketch-tab" data-stab="tab-apikey">API Key</div>
+          <div class="sketch-tab" data-stab="tab-escalation">升級規則</div>
+        </div>
+
+        <!-- ---- Integration tab ---- -->
+        <div class="settings-tab-content active" id="tab-integration">
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">16</span> 整合管理 — 監控系統</div>
+            <div class="settings-row" data-rough="settings-row">
+              <div>
+                <div class="settings-label">Graylog (Webhook)</div>
+                <div class="settings-value mt-1">Webhook 接收 &rarr; 自動建立 Incident</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="settings-status-ok">[已連線]</span>
+                <span style="font-family: 'JasonHandwriting', cursive; font-size: 15px; color: #78716c;">· 最後成功: 09:15</span>
+              </div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div>
+                <div class="settings-label">Graylog (API)</div>
+                <div class="settings-value mt-1">Log 搜尋 · 報表資料 · 100.98.20.188:9000</div>
+              </div>
+              <div class="flex items-center gap-2"><span class="settings-status-ok">[已連線]</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">測試</button></div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div>
+                <div class="settings-label">LibreNMS (Webhook)</div>
+                <div class="settings-value mt-1">Webhook 接收 &rarr; 自動建立 Incident</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="settings-status-ok">[已連線]</span>
+                <span style="font-family: 'JasonHandwriting', cursive; font-size: 15px; color: #78716c;">· 最後成功: 09:20</span>
+              </div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div>
+                <div class="settings-label">LibreNMS (API)</div>
+                <div class="settings-value mt-1">設備同步 · 效能指標 · 100.98.129.83</div>
+              </div>
+              <div class="flex items-center gap-2"><span class="settings-status-ok">[已連線]</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">測試</button> <button class="sketch-btn sketch-btn-sm" data-rough="btn">[ 設定 ]</button></div>
+            </div>
+          </div>
+
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title" style="color: #78716c;">整合管理 — 通訊整合</div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">Email (SMTP)</div><div class="settings-value mt-1">smtp.auras.com.tw:587</div></div>
+              <div class="flex items-center gap-2"><span class="settings-status-ok">[已連線]</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">設定</button></div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">Line Notify</div><div class="settings-value mt-1">告警通知推播</div></div>
+              <div class="flex items-center gap-2"><span class="settings-status-off">[未設定]</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">設定</button></div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">Slack</div><div class="settings-value mt-1">—</div></div>
+              <div class="flex items-center gap-2"><span class="settings-status-off">[未設定]</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">設定</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Notification tab ---- -->
+        <div class="settings-tab-content" id="tab-notification">
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">17</span> 通知規則</div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">[SEV1] Critical</div><div class="settings-value mt-1">立即通知所有 IT 人員</div></div>
+              <div class="flex items-center gap-2"><span style="font-size: 14px;">Email + Line</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">編輯</button></div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">[SEV2] High</div><div class="settings-value mt-1">通知當值 IT 人員</div></div>
+              <div class="flex items-center gap-2"><span style="font-size: 14px;">Email</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">編輯</button></div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">[SEV3] Medium</div><div class="settings-value mt-1">記錄，不即時通知</div></div>
+              <div class="flex items-center gap-2"><span style="font-size: 14px;">站內通知</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">編輯</button></div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">[SEV4] Low</div><div class="settings-value mt-1">僅記錄</div></div>
+              <div class="flex items-center gap-2"><span style="font-size: 14px;">—</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">編輯</button></div>
+            </div>
+          </div>
+
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title" style="color: #78716c;">報表寄送</div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">每日資安簡報</div><div class="settings-value mt-1">每天 08:00</div></div>
+              <div class="flex items-center gap-2"><span style="font-size: 13px;">收件人: it-manager@auras.com.tw</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">編輯</button></div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">每週分析報告</div><div class="settings-value mt-1">每週一 09:00</div></div>
+              <div class="flex items-center gap-2"><span style="font-size: 13px;">收件人: it-manager@auras.com.tw</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">編輯</button></div>
+            </div>
+            <div class="settings-row" data-rough="settings-row">
+              <div><div class="settings-label">月度資安報告</div><div class="settings-value mt-1">每月 3 日 09:00</div></div>
+              <div class="flex items-center gap-2"><span style="font-size: 13px;">收件人: it-manager@auras.com.tw, plant-director@auras.com.tw</span> · <button class="sketch-btn sketch-btn-sm" data-rough="btn">編輯</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- API Key tab ---- -->
+        <div class="settings-tab-content" id="tab-apikey">
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">18</span> API Key 管理 <button class="sketch-btn sketch-btn-sm" data-rough="btn" style="margin-left: auto;">+ 建立 API Key</button></div>
+            <div data-rough="table-wrapper">
+              <table class="sketch-table" data-rough="table">
+                <thead><tr><th>名稱</th><th>權限範圍</th><th>建立日期</th><th>最後使用</th><th>狀態</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr><td>Monitoring-Webhook</td><td>Incident Management</td><td>2026-03-20</td><td>2026-03-26 09:15</td><td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">啟用</span></span></td><td><button class="sketch-btn sketch-btn-sm" data-rough="btn">撤銷</button></td></tr>
+                  <tr><td>Report-API</td><td>Analytics</td><td>2026-03-22</td><td>2026-03-26 08:00</td><td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">啟用</span></span></td><td><button class="sketch-btn sketch-btn-sm" data-rough="btn">撤銷</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Escalation Rules tab ---- -->
+        <div class="settings-tab-content" id="tab-escalation">
+          <div class="sketch-card" data-rough="card">
+            <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">19</span> 升級規則 <button class="sketch-btn sketch-btn-sm" data-rough="btn" style="margin-left: auto;">+ 新增規則</button></div>
+            <div data-rough="table-wrapper">
+              <table class="rule-table" data-rough="table">
+                <thead><tr><th>嚴重度</th><th>條件</th><th>動作</th><th>通知對象</th><th>狀態</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="sketch-badge sketch-badge-red" data-rough="badge" data-rough-color="#ef4444"><span style="position:relative;z-index:2">SEV1</span></span></td><td>未確認超過 15 分鐘</td><td>自動升級 + 通知</td><td>IT 主管</td><td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">啟用</span></span></td></tr>
+                  <tr><td><span class="sketch-badge sketch-badge-amber" data-rough="badge" data-rough-color="#f59e0b"><span style="position:relative;z-index:2">SEV2</span></span></td><td>未確認超過 30 分鐘</td><td>自動通知</td><td>團隊主管</td><td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">啟用</span></span></td></tr>
+                  <tr><td><span class="sketch-badge sketch-badge-red" data-rough="badge" data-rough-color="#ef4444"><span style="position:relative;z-index:2">SEV1</span></span></td><td>未解決超過 1 小時</td><td>二次升級 + 通知</td><td>廠長</td><td><span class="sketch-badge sketch-badge-green" data-rough="badge" data-rough-color="#22c55e"><span style="position:relative;z-index:2">啟用</span></span></td></tr>
+                  <tr><td><span class="sketch-badge sketch-badge-amber" data-rough="badge" data-rough-color="#f59e0b"><span style="position:relative;z-index:2">SEV2</span></span></td><td>未解決超過 4 小時</td><td>通知</td><td>IT 主管</td><td><span class="sketch-badge sketch-badge-muted" data-rough="badge" data-rough-color="#d6d3d1"><span style="position:relative;z-index:2">停用</span></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="sketch-card" data-rough="card-dashed">
+            <div class="sketch-card-title" style="color: #a8a29e;">值班排程 <span class="future-tag" data-rough="future-tag">[v0.3]</span></div>
+            <div style="color: #a8a29e; padding: 24px; text-align: center; font-family: 'JasonHandwriting', cursive; font-size: 20px;">[值班排程功能將在 v0.3 版本推出]</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- .content -->
+  </div><!-- .main-area -->
+</div><!-- .app -->
+
+<!-- ================================================ -->
+<!-- AI Copilot Panel                                  -->
+<!-- ================================================ -->
+<div class="copilot-overlay" id="copilot-panel">
+  <div class="copilot-header" data-rough="copilot-header">
+    <span><span class="sketch-num" data-rough="circle-num">20</span> AI Copilot</span>
+    <div class="copilot-close" data-rough="btn" onclick="toggleCopilot()">X</div>
+  </div>
+  <div class="px-5 py-2"><span class="sketch-anno">&rarr; 任何頁面皆可開啟</span></div>
+  <div class="copilot-quick" data-rough="copilot-quick-border">
+    <button class="sketch-btn sketch-btn-sm" data-rough="btn">產出今日報告</button>
+    <button class="sketch-btn sketch-btn-sm" data-rough="btn">查設備狀態</button>
+    <button class="sketch-btn sketch-btn-sm" data-rough="btn">查最近告警</button>
+  </div>
+  <div class="copilot-chat">
+    <div class="chat-msg user">
+      <div class="chat-label">You</div>
+      <div class="chat-bubble" data-rough="chat-bubble">TH-DCVer1 的 CPU 使用率是多少？</div>
+    </div>
+    <div class="chat-msg ai">
+      <div class="chat-label">AI Copilot</div>
+      <div class="chat-bubble" data-rough="chat-bubble">
+        TH-DCVer1 目前 CPU 使用率為 23%，屬於正常範圍。
+        <div class="chat-device-box" data-rough="device-box">
+          設備: TH-DCVer1<br>
+          CPU: 23% · 記憶體: 68%<br>
+          磁碟: 87% [WARN]<br>
+          Uptime: 142 days<br>
+          來源: LibreNMS
+        </div>
+      </div>
+    </div>
+    <div class="chat-msg user">
+      <div class="chat-label">You</div>
+      <div class="chat-bubble" data-rough="chat-bubble">過去 1 小時有哪些 deny log？</div>
+    </div>
+    <div class="chat-msg ai">
+      <div class="chat-label">AI Copilot</div>
+      <div class="chat-bubble" data-rough="chat-bubble">
+        過去 1 小時共有 487 筆 deny log，主要來源：
+        <div class="chat-device-box" data-rough="device-box">
+          10.20.30.15 — 312 筆 (64%)<br>
+          10.20.30.22 — 98 筆 (20%)<br>
+          10.20.30.8 &nbsp;— 41 筆 (8%)<br>
+          其他 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— 36 筆 (8%)<br>
+          ─────────────────<br>
+          主要目標: 443/tcp, 80/tcp<br>
+          觸發規則: block-suspicious
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="copilot-input" data-rough="copilot-input-border">
+    <div class="input-wrapper flex-1" data-rough="input">
+      <input class="sketch-input" type="text" placeholder="輸入問題...">
+    </div>
+    <button class="sketch-btn sketch-btn-sm" data-rough="btn">&rarr;</button>
+  </div>
+</div>
+
+<!-- Floating AI Button -->
+<button class="ai-fab" id="ai-fab-btn" onclick="toggleCopilot()">AI</button>
+
+<!-- ================================================ -->
+<!-- JAVASCRIPT — All interactions + rough.js rendering -->
+<!-- ================================================ -->
+<script>
+(function() {
+  // --- State ---
+  var currentPage = 'dashboard';
+  var returnPage = 'incidents';
+
+  // --- Page Navigation ---
+  function showPage(pageId, breadcrumb) {
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    var target = document.getElementById('page-' + pageId);
+    if (target) target.classList.add('active');
+    currentPage = pageId;
+
+    // Update sidebar active
+    document.querySelectorAll('.sidebar-nav li').forEach(function(li) { li.classList.remove('active'); });
+    var navMap = { dashboard: 'dashboard', incidents: 'incidents', detail: 'incidents', reports: 'reports', devices: 'devices', settings: 'settings' };
+    var navKey = navMap[pageId] || pageId;
+    document.querySelectorAll('.sidebar-nav li').forEach(function(li) {
+      if (li.dataset.page === navKey) li.classList.add('active');
+    });
+
+    // Update breadcrumb
+    document.getElementById('breadcrumb').textContent = breadcrumb || pageId;
+
+    // Re-render rough borders for newly visible elements
+    requestAnimationFrame(function() {
+      renderRoughBorders();
+    });
+  }
+
+  // Sidebar clicks
+  document.querySelectorAll('.sidebar-nav li').forEach(function(li) {
+    li.addEventListener('click', function() {
+      if (li.classList.contains('disabled')) return;
+      var page = li.dataset.page;
+      if (page === 'dashboard') showPage('dashboard', 'Dashboard');
+      else if (page === 'incidents') showPage('incidents', '事件管理');
+      else if (page === 'reports') showPage('reports', '分析報表');
+      else if (page === 'devices') showPage('devices', '設備概覽');
+      else if (page === 'settings') showPage('settings', '設定');
+    });
+  });
+
+  // View all incidents link
+  document.getElementById('view-all-incidents').addEventListener('click', function() {
+    showPage('incidents', '事件管理');
+  });
+
+  // Incident row clicks (dashboard + list)
+  document.addEventListener('click', function(e) {
+    var item = e.target.closest('[data-goto]');
+    if (!item) return;
+    var goto = item.dataset.goto;
+    if (goto === 'detail' || goto === 'detail-generic') {
+      returnPage = currentPage === 'dashboard' ? 'incidents' : 'incidents';
+      showPage('detail', '事件管理 > INC-001 PA-450 大量 Deny 爆發');
+    }
+  });
+
+  // Back to list
+  document.getElementById('back-to-list').addEventListener('click', function() {
+    showPage('incidents', '事件管理');
+  });
+
+  // --- Detail Tabs ---
+  document.getElementById('detail-tabs').addEventListener('click', function(e) {
+    var tabItem = e.target.closest('.sketch-tab');
+    if (!tabItem) return;
+    var tabId = tabItem.dataset.tab;
+
+    // Activate tab
+    document.querySelectorAll('#detail-tabs .sketch-tab').forEach(function(t) { t.classList.remove('active'); });
+    tabItem.classList.add('active');
+
+    // Show content
+    document.querySelectorAll('#page-detail .tab-content').forEach(function(tc) { tc.classList.remove('active'); });
+    var content = document.getElementById(tabId);
+    if (content) content.classList.add('active');
+
+    // Re-render rough for tab underlines and newly visible content
+    requestAnimationFrame(function() { renderRoughBorders(); });
+  });
+
+  // --- Filter Tabs on Incident List ---
+  document.getElementById('incident-filter').addEventListener('click', function(e) {
+    var tab = e.target.closest('.sketch-tab');
+    if (!tab) return;
+    document.querySelectorAll('#incident-filter .sketch-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    requestAnimationFrame(function() { renderRoughBorders(); });
+  });
+
+  // --- Settings sub-tabs ---
+  document.getElementById('settings-tabs').addEventListener('click', function(e) {
+    var tab = e.target.closest('.sketch-tab');
+    if (!tab) return;
+    var tabId = tab.dataset.stab;
+    if (!tabId) return;
+    // Activate tab
+    document.querySelectorAll('#settings-tabs .sketch-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    // Show content
+    document.querySelectorAll('.settings-tab-content').forEach(function(tc) { tc.style.display = 'none'; tc.classList.remove('active'); });
+    var content = document.getElementById(tabId);
+    if (content) { content.style.display = 'block'; content.classList.add('active'); }
+    requestAnimationFrame(function() { renderRoughBorders(); });
+  });
+
+  // --- Device filter tabs (just visual toggle) ---
+  document.getElementById('device-filter').addEventListener('click', function(e) {
+    var tab = e.target.closest('.sketch-tab');
+    if (!tab) return;
+    document.querySelectorAll('#device-filter .sketch-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    requestAnimationFrame(function() { renderRoughBorders(); });
+  });
+
+  // --- AI Copilot Toggle ---
+  window.toggleCopilot = function() {
+    document.getElementById('copilot-panel').classList.toggle('open');
+    // Render copilot rough borders after transition
+    setTimeout(function() { renderRoughBorders(); }, 250);
+  };
+
+  // ============================================================
+  // rough.js RENDERING
+  // ============================================================
+
+  function roundedRectPath(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    return 'M' + (x + r) + ',' + y +
+      ' L' + (x + w - r) + ',' + y +
+      ' A' + r + ',' + r + ' 0 0 1 ' + (x + w) + ',' + (y + r) +
+      ' L' + (x + w) + ',' + (y + h - r) +
+      ' A' + r + ',' + r + ' 0 0 1 ' + (x + w - r) + ',' + (y + h) +
+      ' L' + (x + r) + ',' + (y + h) +
+      ' A' + r + ',' + r + ' 0 0 1 ' + x + ',' + (y + h - r) +
+      ' L' + x + ',' + (y + r) +
+      ' A' + r + ',' + r + ' 0 0 1 ' + (x + r) + ',' + y +
+      ' Z';
+  }
+
+  function makeSvg() {
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible;';
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svg.classList.add('rough-svg-overlay');
+    return svg;
+  }
+
+  function clearRoughSvgs(el) {
+    el.querySelectorAll(':scope > .rough-svg-overlay').forEach(function(s) { s.remove(); });
+  }
+
+  function ensureRelative(el) {
+    var pos = getComputedStyle(el).position;
+    if (pos === 'static') el.style.position = 'relative';
+  }
+
+  function drawRoughRect(el, opts, seed) {
+    if (el.offsetWidth === 0 && el.offsetHeight === 0) return;
+    clearRoughSvgs(el);
+    ensureRelative(el);
+
+    var svg = makeSvg();
+    el.insertBefore(svg, el.firstChild);
+
+    var w = el.offsetWidth;
+    var h = el.offsetHeight;
+    var rc = rough.svg(svg);
+    var r = opts.radius !== undefined ? opts.radius : 12;
+    var pad = 2;
+    var d = roundedRectPath(pad, pad, w - pad * 2, h - pad * 2, r);
+
+    var roughOpts = {
+      stroke: opts.stroke || '#1c1917',
+      strokeWidth: opts.strokeWidth || 1.5,
+      roughness: opts.roughness !== undefined ? opts.roughness : 1.2,
+      seed: seed
+    };
+    if (opts.fill) {
+      roughOpts.fill = opts.fill;
+      roughOpts.fillStyle = opts.fillStyle || 'hachure';
+      if (opts.fillWeight) roughOpts.fillWeight = opts.fillWeight;
+      if (opts.hachureGap) roughOpts.hachureGap = opts.hachureGap;
+    }
+    svg.appendChild(rc.path(d, roughOpts));
+
+    // Ensure children are above SVG
+    Array.from(el.children).forEach(function(child) {
+      if (child !== svg && !child.classList.contains('rough-svg-overlay')) {
+        if (!child.style.position || child.style.position === 'static') {
+          child.style.position = 'relative';
+        }
+        if (!child.style.zIndex) child.style.zIndex = '1';
+      }
+    });
+  }
+
+  function drawRoughDashedRect(el, seed) {
+    if (el.offsetWidth === 0 && el.offsetHeight === 0) return;
+    clearRoughSvgs(el);
+    ensureRelative(el);
+
+    var svg = makeSvg();
+    el.insertBefore(svg, el.firstChild);
+
+    var w = el.offsetWidth;
+    var h = el.offsetHeight;
+    var rc = rough.svg(svg);
+    var r = 12;
+    var pad = 2;
+    var d = roundedRectPath(pad, pad, w - pad * 2, h - pad * 2, r);
+
+    svg.appendChild(rc.path(d, {
+      stroke: '#d6d3d1',
+      strokeWidth: 1.5,
+      roughness: 1.2,
+      seed: seed,
+      strokeLineDash: [8, 6]
+    }));
+
+    Array.from(el.children).forEach(function(child) {
+      if (child !== svg && !child.classList.contains('rough-svg-overlay')) {
+        if (!child.style.position || child.style.position === 'static') child.style.position = 'relative';
+        if (!child.style.zIndex) child.style.zIndex = '1';
+      }
+    });
+  }
+
+  function drawRoughLine(parentEl, x1, y1, x2, y2, opts, seed) {
+    var svg = makeSvg();
+    parentEl.appendChild(svg);
+    var rc = rough.svg(svg);
+    svg.appendChild(rc.line(x1, y1, x2, y2, {
+      stroke: opts.stroke || '#1c1917',
+      strokeWidth: opts.strokeWidth || 1.5,
+      roughness: opts.roughness !== undefined ? opts.roughness : 1,
+      seed: seed
+    }));
+  }
+
+  function drawRoughCircle(el, seed) {
+    if (el.offsetWidth === 0 && el.offsetHeight === 0) return;
+    clearRoughSvgs(el);
+    ensureRelative(el);
+
+    var svg = makeSvg();
+    el.insertBefore(svg, el.firstChild);
+
+    var w = el.offsetWidth;
+    var h = el.offsetHeight;
+    var rc = rough.svg(svg);
+    var cx = w / 2;
+    var cy = h / 2;
+    var diameter = Math.min(w, h) - 2;
+
+    svg.appendChild(rc.circle(cx, cy, diameter, {
+      stroke: '#0ea5e9',
+      strokeWidth: 1.5,
+      roughness: 1,
+      seed: seed,
+      fill: 'none'
+    }));
+  }
+
+  // Global seed counter for deterministic uniqueness
+  var seedCounter = 42;
+  function nextSeed() { return seedCounter++; }
+
+  function renderRoughBorders() {
+    seedCounter = 42; // Reset for deterministic rendering
+
+    // ---- Sidebar vertical line ----
+    var sidebar = document.getElementById('sidebar-el');
+    if (sidebar) {
+      clearRoughSvgs(sidebar);
+      ensureRelative(sidebar);
+      var sh = sidebar.offsetHeight;
+      var sw = sidebar.offsetWidth;
+      var ssvg = makeSvg();
+      ssvg.style.zIndex = '10';
+      sidebar.appendChild(ssvg);
+      var src = rough.svg(ssvg);
+      ssvg.appendChild(src.line(sw - 1, 0, sw - 1, sh, {
+        stroke: '#1c1917',
+        strokeWidth: 1.5,
+        roughness: 1,
+        seed: nextSeed()
+      }));
+    }
+
+    // ---- Active sidebar item underline ----
+    // Clear ALL old underlines first
+    document.querySelectorAll('.sidebar-nav .rough-underline').forEach(function(s) { s.remove(); });
+    document.querySelectorAll('.sidebar-nav li.active').forEach(function(li) {
+      var w = li.offsetWidth;
+      var h = li.offsetHeight;
+      var usvg = makeSvg();
+      usvg.classList.add('rough-underline');
+      usvg.style.zIndex = '10';
+      li.style.position = 'relative';
+      li.appendChild(usvg);
+      var urc = rough.svg(usvg);
+      usvg.appendChild(urc.line(12, h - 2, w - 12, h - 2, {
+        stroke: '#1c1917',
+        strokeWidth: 2,
+        roughness: 1.5,
+        seed: nextSeed()
+      }));
+    });
+
+    // ---- Render Lucide icons through rough.js ----
+    var lucideIcons = {
+      'home': [
+        'M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8',
+        'M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'
+      ],
+      'alert-triangle': [
+        'm21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3',
+        'M12 9v4',
+        'M12 17h.01'
+      ],
+      'bar-chart': [
+        'M3 3v16a2 2 0 0 0 2 2h16',
+        'M18 17V9',
+        'M13 17V5',
+        'M8 17v-3'
+      ],
+      'server': [
+        'M2 2h20v8H2z',
+        'M2 14h20v8H2z',
+        'M6 6h.01',
+        'M6 18h.01'
+      ],
+      'settings': [
+        'M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z',
+        'M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0'
+      ],
+      'bell': [
+        'M10.268 21a2 2 0 0 0 3.464 0',
+        'M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326'
+      ],
+      'user': [
+        'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2',
+        'M12 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0-8 0'
+      ],
+      'bot': [
+        'M12 8V4H8',
+        'M4 8h16v12H4z',
+        'M2 14h2',
+        'M20 14h2',
+        'M15 13v2',
+        'M9 13v2'
+      ]
+    };
+
+    document.querySelectorAll('.nav-icon').forEach(function(svgEl) {
+      // Clear previous
+      while (svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
+      var iconName = svgEl.dataset.icon;
+      var paths = lucideIcons[iconName];
+      if (!paths) return;
+      var rc = rough.svg(svgEl);
+      var iconSeed = nextSeed();
+      var isSmall = svgEl.classList.contains('topbar-icon');
+      paths.forEach(function(d, i) {
+        svgEl.appendChild(rc.path(d, {
+          stroke: 'currentColor',
+          strokeWidth: isSmall ? 1.2 : 1.5,
+          roughness: isSmall ? 0.6 : 1,
+          seed: iconSeed + i,
+          fill: 'none'
+        }));
+      });
+    });
+
+    // ---- Topbar horizontal line ----
+    var topbar = document.getElementById('topbar-el');
+    if (topbar) {
+      clearRoughSvgs(topbar);
+      ensureRelative(topbar);
+      var tw = topbar.offsetWidth;
+      var th = topbar.offsetHeight;
+      var tsvg = makeSvg();
+      tsvg.style.zIndex = '10';
+      topbar.appendChild(tsvg);
+      var trc = rough.svg(tsvg);
+      tsvg.appendChild(trc.line(0, th - 1, tw, th - 1, {
+        stroke: '#1c1917',
+        strokeWidth: 1.5,
+        roughness: 1,
+        seed: nextSeed()
+      }));
+    }
+
+    // ---- Cards ----
+    document.querySelectorAll('[data-rough="card"]').forEach(function(el) {
+      drawRoughRect(el, { stroke: '#1c1917', strokeWidth: 1.5, roughness: 1.2, radius: 12 }, nextSeed());
+    });
+
+    // ---- Dashed cards ----
+    document.querySelectorAll('[data-rough="card-dashed"]').forEach(function(el) {
+      drawRoughDashedRect(el, nextSeed());
+    });
+
+    // ---- KPI Cards ----
+    document.querySelectorAll('[data-rough="kpi"]').forEach(function(el) {
+      drawRoughRect(el, { stroke: '#1c1917', strokeWidth: 1.5, roughness: 1, radius: 12 }, nextSeed());
+    });
+
+    // ---- Buttons ----
+    document.querySelectorAll('[data-rough="btn"]').forEach(function(el) {
+      drawRoughRect(el, { stroke: '#1c1917', strokeWidth: 1.5, roughness: 0.8, radius: 6 }, nextSeed());
+    });
+
+    // ---- Primary buttons (dark fill) ----
+    document.querySelectorAll('[data-rough="btn-primary"]').forEach(function(el) {
+      drawRoughRect(el, {
+        stroke: '#1c1917', strokeWidth: 1.5,
+        fill: '#1c1917', fillStyle: 'cross-hatch', fillWeight: 1, hachureGap: 4,
+        roughness: 1, radius: 6
+      }, nextSeed());
+    });
+
+    // ---- Badges ----
+    document.querySelectorAll('[data-rough="badge"]').forEach(function(el) {
+      var color = el.dataset.roughColor || '#1c1917';
+      var bgColor = el.dataset.roughBg || 'transparent';
+      drawRoughRect(el, {
+        stroke: color, strokeWidth: 1.5,
+        fill: bgColor, fillStyle: 'solid',
+        roughness: 0.8, radius: 10
+      }, nextSeed());
+    });
+
+    // ---- Circle numbers ----
+    document.querySelectorAll('[data-rough="circle-num"]').forEach(function(el) {
+      drawRoughCircle(el, nextSeed());
+    });
+
+    // ---- AI sections ----
+    document.querySelectorAll('[data-rough="ai-section"]').forEach(function(el) {
+      drawRoughRect(el, { stroke: '#a8a29e', strokeWidth: 1, roughness: 1, radius: 10 }, nextSeed());
+    });
+
+    // ---- Comments ----
+    document.querySelectorAll('[data-rough="comment"]').forEach(function(el) {
+      drawRoughRect(el, { stroke: '#1c1917', strokeWidth: 1.5, roughness: 1, radius: 10 }, nextSeed());
+    });
+
+    // ---- Chat bubbles ----
+    document.querySelectorAll('[data-rough="chat-bubble"]').forEach(function(el) {
+      drawRoughRect(el, { stroke: '#1c1917', strokeWidth: 1.5, roughness: 1, radius: 10 }, nextSeed());
+    });
+
+    // ---- Device boxes ----
+    document.querySelectorAll('[data-rough="device-box"]').forEach(function(el) {
+      drawRoughRect(el, { stroke: '#a8a29e', strokeWidth: 1, roughness: 0.8, radius: 8 }, nextSeed());
+    });
+
+    // ---- Input wrappers ----
+    document.querySelectorAll('[data-rough="input"]').forEach(function(el) {
+      drawRoughRect(el, { stroke: '#1c1917', strokeWidth: 1.5, roughness: 0.8, radius: 6 }, nextSeed());
+    });
+
+    // ---- Future tags ----
+    document.querySelectorAll('[data-rough="future-tag"]').forEach(function(el) {
+      drawRoughDashedRect(el, nextSeed());
+    });
+
+    // ---- Tab bars: draw bottom line and active tab underline ----
+    document.querySelectorAll('[data-rough="tab-bar"]').forEach(function(tabBar) {
+      clearRoughSvgs(tabBar);
+      ensureRelative(tabBar);
+
+      var bw = tabBar.offsetWidth;
+      var bh = tabBar.offsetHeight;
+      if (bw === 0 || bh === 0) return;
+
+      var svg = makeSvg();
+      svg.style.zIndex = '0';
+      tabBar.appendChild(svg);
+      var rc = rough.svg(svg);
+
+      // Bottom line across tab bar
+      svg.appendChild(rc.line(0, bh - 1, bw, bh - 1, {
+        stroke: '#d6d3d1',
+        strokeWidth: 1.5,
+        roughness: 1,
+        seed: nextSeed()
+      }));
+
+      // Active tab underline
+      var activeTab = tabBar.querySelector('.sketch-tab.active');
+      if (activeTab) {
+        var tabLeft = activeTab.offsetLeft;
+        var tabW = activeTab.offsetWidth;
+        svg.appendChild(rc.line(tabLeft + 4, bh - 1, tabLeft + tabW - 4, bh - 1, {
+          stroke: '#1c1917',
+          strokeWidth: 2.5,
+          roughness: 0.8,
+          seed: nextSeed()
+        }));
+      }
+    });
+
+    // ---- Tables: draw outer border + header bottom line + row separator lines ----
+    document.querySelectorAll('[data-rough="table-wrapper"]').forEach(function(wrapper) {
+      clearRoughSvgs(wrapper);
+      ensureRelative(wrapper);
+
+      var table = wrapper.querySelector('table');
+      if (!table) return;
+      var tw2 = wrapper.offsetWidth;
+      var th2 = wrapper.offsetHeight;
+      if (tw2 === 0 || th2 === 0) return;
+
+      var svg = makeSvg();
+      svg.style.zIndex = '2';
+      wrapper.appendChild(svg);
+      var rc = rough.svg(svg);
+
+      // Outer border
+      var d = roundedRectPath(1, 1, tw2 - 2, th2 - 2, 8);
+      svg.appendChild(rc.path(d, {
+        stroke: '#1c1917',
+        strokeWidth: 1.5,
+        roughness: 1.2,
+        seed: nextSeed()
+      }));
+
+      // Header bottom line
+      var thead = table.querySelector('thead');
+      if (thead) {
+        var headH = thead.offsetHeight;
+        svg.appendChild(rc.line(4, headH, tw2 - 4, headH, {
+          stroke: '#1c1917',
+          strokeWidth: 1.5,
+          roughness: 1,
+          seed: nextSeed()
+        }));
+      }
+
+      // Row separator lines
+      var rows = table.querySelectorAll('tbody tr');
+      var yAccum = thead ? thead.offsetHeight : 0;
+      rows.forEach(function(row, idx) {
+        if (idx < rows.length - 1) {
+          yAccum += row.offsetHeight;
+          svg.appendChild(rc.line(8, yAccum, tw2 - 8, yAccum, {
+            stroke: '#e7e5e4',
+            strokeWidth: 1,
+            roughness: 0.8,
+            seed: nextSeed()
+          }));
+        }
+      });
+    });
+
+    // ---- List row separators (incident-item, health-item) ----
+    document.querySelectorAll('[data-rough="list-row"]').forEach(function(el) {
+      // We draw a bottom line for each row except the last
+      clearRoughSvgs(el);
+      ensureRelative(el);
+
+      var parent = el.parentElement;
+      var siblings = parent.querySelectorAll('[data-rough="list-row"]');
+      var isLast = (el === siblings[siblings.length - 1]);
+      if (isLast) return;
+
+      var w = el.offsetWidth;
+      var h = el.offsetHeight;
+      if (w === 0 || h === 0) return;
+
+      var svg = makeSvg();
+      svg.style.zIndex = '0';
+      el.appendChild(svg);
+      var rc = rough.svg(svg);
+      svg.appendChild(rc.line(8, h - 1, w - 8, h - 1, {
+        stroke: '#e7e5e4',
+        strokeWidth: 1,
+        roughness: 0.8,
+        seed: nextSeed()
+      }));
+    });
+
+    // ---- Settings row separators ----
+    document.querySelectorAll('[data-rough="settings-row"]').forEach(function(el) {
+      clearRoughSvgs(el);
+      ensureRelative(el);
+
+      // Check if last settings-row in parent
+      var parent = el.parentElement;
+      var siblings = parent.querySelectorAll('[data-rough="settings-row"]');
+      var isLast = (el === siblings[siblings.length - 1]);
+      if (isLast) return;
+
+      var w = el.offsetWidth;
+      var h = el.offsetHeight;
+      if (w === 0 || h === 0) return;
+
+      var svg = makeSvg();
+      svg.style.zIndex = '0';
+      el.appendChild(svg);
+      var rc = rough.svg(svg);
+      svg.appendChild(rc.line(0, h - 1, w, h - 1, {
+        stroke: '#e7e5e4',
+        strokeWidth: 1,
+        roughness: 0.8,
+        seed: nextSeed()
+      }));
+    });
+
+    // ---- Timeline left line ----
+    document.querySelectorAll('[data-rough="timeline"]').forEach(function(el) {
+      clearRoughSvgs(el);
+      ensureRelative(el);
+
+      var h = el.offsetHeight;
+      if (h === 0) return;
+
+      var svg = makeSvg();
+      svg.style.zIndex = '0';
+      el.appendChild(svg);
+      var rc = rough.svg(svg);
+      svg.appendChild(rc.line(0, 0, 0, h, {
+        stroke: '#a8a29e',
+        strokeWidth: 1.5,
+        roughness: 1,
+        seed: nextSeed()
+      }));
+    });
+
+    // ---- Copilot panel left border ----
+    var copilot = document.getElementById('copilot-panel');
+    if (copilot && copilot.classList.contains('open')) {
+      clearRoughSvgs(copilot);
+      ensureRelative(copilot);
+      var ch = copilot.offsetHeight;
+      var csvg = makeSvg();
+      csvg.style.zIndex = '10';
+      copilot.appendChild(csvg);
+      var crc = rough.svg(csvg);
+      crc && csvg.appendChild(crc.line(1, 0, 1, ch, {
+        stroke: '#1c1917',
+        strokeWidth: 1.5,
+        roughness: 1,
+        seed: nextSeed()
+      }));
+    }
+
+    // ---- Copilot header bottom line ----
+    document.querySelectorAll('[data-rough="copilot-header"]').forEach(function(el) {
+      clearRoughSvgs(el);
+      ensureRelative(el);
+      var w = el.offsetWidth;
+      var h = el.offsetHeight;
+      if (w === 0 || h === 0) return;
+      var svg = makeSvg();
+      svg.style.zIndex = '0';
+      el.appendChild(svg);
+      var rc = rough.svg(svg);
+      svg.appendChild(rc.line(0, h - 1, w, h - 1, {
+        stroke: '#1c1917',
+        strokeWidth: 1.5,
+        roughness: 1,
+        seed: nextSeed()
+      }));
+    });
+
+    // ---- Copilot quick section bottom line ----
+    document.querySelectorAll('[data-rough="copilot-quick-border"]').forEach(function(el) {
+      clearRoughSvgs(el);
+      ensureRelative(el);
+      var w = el.offsetWidth;
+      var h = el.offsetHeight;
+      if (w === 0 || h === 0) return;
+      var svg = makeSvg();
+      svg.style.zIndex = '0';
+      el.appendChild(svg);
+      var rc = rough.svg(svg);
+      svg.appendChild(rc.line(0, h - 1, w, h - 1, {
+        stroke: '#e7e5e4',
+        strokeWidth: 1,
+        roughness: 0.8,
+        seed: nextSeed()
+      }));
+    });
+
+    // ---- Copilot input section top line ----
+    document.querySelectorAll('[data-rough="copilot-input-border"]').forEach(function(el) {
+      clearRoughSvgs(el);
+      ensureRelative(el);
+      var w = el.offsetWidth;
+      if (w === 0) return;
+      var svg = makeSvg();
+      svg.style.zIndex = '0';
+      el.appendChild(svg);
+      var rc = rough.svg(svg);
+      svg.appendChild(rc.line(0, 1, w, 1, {
+        stroke: '#1c1917',
+        strokeWidth: 1.5,
+        roughness: 1,
+        seed: nextSeed()
+      }));
+    });
+
+    // ---- AI FAB circle ----
+    var fab = document.getElementById('ai-fab-btn');
+    if (fab) {
+      clearRoughSvgs(fab);
+      ensureRelative(fab);
+      var fw = fab.offsetWidth;
+      var fh = fab.offsetHeight;
+      if (fw > 0 && fh > 0) {
+        var fsvg = makeSvg();
+        fab.insertBefore(fsvg, fab.firstChild);
+        var frc = rough.svg(fsvg);
+        fsvg.appendChild(frc.circle(fw / 2, fh / 2, fw - 4, {
+          stroke: '#1c1917',
+          strokeWidth: 1.5,
+          roughness: 1,
+          seed: nextSeed(),
+          fill: 'none'
+        }));
+      }
+    }
+
+    // ---- Sidebar logo bottom line ----
+    var sidebarLogo = document.querySelector('.sidebar-logo');
+    if (sidebarLogo) {
+      clearRoughSvgs(sidebarLogo);
+      ensureRelative(sidebarLogo);
+      var lw = sidebarLogo.offsetWidth;
+      var lh = sidebarLogo.offsetHeight;
+      if (lw > 0 && lh > 0) {
+        var lsvg = makeSvg();
+        sidebarLogo.appendChild(lsvg);
+        var lrc = rough.svg(lsvg);
+        lsvg.appendChild(lrc.line(0, lh - 1, lw, lh - 1, {
+          stroke: '#d6d3d1',
+          strokeWidth: 1,
+          roughness: 1,
+          seed: nextSeed()
+        }));
+      }
+    }
+
+    // ---- Sidebar version top line ----
+    var sidebarVer = document.querySelector('.sidebar-version');
+    if (sidebarVer) {
+      clearRoughSvgs(sidebarVer);
+      ensureRelative(sidebarVer);
+      var vw = sidebarVer.offsetWidth;
+      if (vw > 0) {
+        var vsvg = makeSvg();
+        sidebarVer.appendChild(vsvg);
+        var vrc = rough.svg(vsvg);
+        vsvg.appendChild(vrc.line(0, 1, vw, 1, {
+          stroke: '#d6d3d1',
+          strokeWidth: 1,
+          roughness: 1,
+          seed: nextSeed()
+        }));
+      }
+    }
+  }
+
+  // ---- Initial render after fonts and DOM are ready ----
+  function initialRender() {
+    renderRoughBorders();
+    // Second pass to catch any elements that were still sizing
+    setTimeout(function() { renderRoughBorders(); }, 500);
+  }
+
+  // Wait for fonts to load, then render
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function() {
+      requestAnimationFrame(initialRender);
+    });
+  } else {
+    window.addEventListener('load', function() {
+      requestAnimationFrame(initialRender);
+    });
+  }
+
+  // Re-render on resize
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      renderRoughBorders();
+    }, 200);
+  });
+
+  // Make renderRoughBorders globally available
+  window.renderRoughBorders = renderRoughBorders;
+
+})();
+</script>
+</body>
+</html>
