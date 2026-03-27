@@ -71,19 +71,57 @@ code, pre, .mono { font-family: 'Courier New', monospace !important; }
 * { scrollbar-width: thin; scrollbar-color: #d6d3d1 transparent; }
 
 /* ========== RWD ========== */
+
+/* Large desktop: constrain content width */
+@media (min-width: 1920px) {
+  .content { max-width: 1400px; }
+}
+
+/* Tablet landscape / small desktop */
+@media (max-width: 1024px) {
+  .sidebar { width: 180px; min-width: 180px; }
+  .sidebar-nav li { font-size: 17px; padding: 10px 12px; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Tablet portrait */
 @media (max-width: 768px) {
-  .app { flex-direction: column; }
-  .sidebar { width: 100%; min-width: 100%; height: auto; flex-direction: row; overflow-x: auto; }
-  .sidebar-logo { padding: 12px 16px; white-space: nowrap; }
-  .sidebar-nav { display: flex; flex-direction: row; padding: 0; overflow-x: auto; flex: 1; }
-  .sidebar-nav li { white-space: nowrap; padding: 10px 14px; font-size: 16px; }
+  .app { flex-direction: column; height: auto; }
+  .sidebar { width: 100%; min-width: 100%; height: auto; flex-direction: row; overflow-x: auto; border-right: none; }
+  .sidebar-logo { padding: 10px 16px; white-space: nowrap; font-size: 16px; }
+  .sidebar-nav { display: flex; flex-direction: row; padding: 0; overflow-x: auto; flex: 1; gap: 0; }
+  .sidebar-nav li { white-space: nowrap; padding: 10px 14px; font-size: 15px; }
+  .sidebar-nav li .nav-icon { width: 16px; height: 16px; }
   .sidebar-version { display: none; }
+  .main-area { height: calc(100vh - 52px); }
+  .topbar { position: sticky; top: 0; z-index: 20; }
   .content { padding: 16px; }
   .two-col { grid-template-columns: 1fr; }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .report-grid { grid-template-columns: 1fr; }
   .copilot-panel { width: 100% !important; }
   .ai-fab { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 14px; }
+}
+
+/* Phone */
+@media (max-width: 430px) {
+  .sidebar { flex-wrap: nowrap; }
+  .sidebar-logo { display: none; }
+  .sidebar-nav li { padding: 8px 10px; font-size: 13px; gap: 4px; }
+  .sidebar-nav li .nav-icon { width: 14px; height: 14px; }
+  .topbar { padding: 0 12px; }
+  .breadcrumb { font-size: 14px; }
+  .topbar-right { font-size: 14px; gap: 12px; }
+  .content { padding: 12px; }
+  .kpi-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sketch-kpi-value { font-size: 24px; }
+  .sketch-kpi-label { font-size: 13px; }
+  .sketch-card-title { font-size: 17px; }
+  .two-col { grid-template-columns: 1fr; gap: 12px; }
+  .data-table { font-size: 12px; }
+  .sketch-table td, .sketch-table th { padding: 6px 8px; font-size: 12px; }
+  .detail-title { font-size: 20px; }
+  .copilot-panel { width: 100% !important; }
 }
 
 /* rough.js SVG always on top — hover backgrounds show UNDER the lines */
@@ -297,7 +335,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 
   <!-- ========== SIDEBAR ========== -->
   <aside class="sidebar" id="sidebar-el">
-    <div class="sidebar-logo">[N] Arova Nexus <span>MVP</span></div>
+    <div class="sidebar-logo">Arova Nexus <span>MVP</span></div>
     <ul class="sidebar-nav">
       <li class="active" data-page="dashboard"><svg class="nav-icon" data-icon="home" viewBox="0 0 24 24" width="20" height="20"></svg> Dashboard</li>
       <li data-page="incidents"><svg class="nav-icon" data-icon="alert-triangle" viewBox="0 0 24 24" width="20" height="20"></svg> 事件管理</li>
@@ -316,7 +354,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
       <div class="breadcrumb" id="breadcrumb">Dashboard</div>
       <div class="topbar-right">
         <span class="notif-badge"><svg class="nav-icon topbar-icon" data-icon="bell" viewBox="0 0 24 24" width="22" height="22" style="vertical-align:middle;"></svg><span class="badge">3</span></span>
-        <span class="user-info"><svg class="nav-icon topbar-icon" data-icon="user" viewBox="0 0 24 24" width="22" height="22" style="vertical-align:middle;"></svg> Kyle</span>
+        <span class="user-info"><svg class="nav-icon topbar-icon" data-icon="user" viewBox="0 0 24 24" width="22" height="22" style="vertical-align:middle;"></svg> John Doe</span>
       </div>
     </header>
 
@@ -475,7 +513,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
                   <td>ESXi-01 CPU 使用率 82%</td>
                   <td>LibreNMS</td>
                   <td>調查中</td>
-                  <td>Kyle</td>
+                  <td>John Doe</td>
                   <td>3 hr</td>
                 </tr>
                 <tr data-goto="detail-generic">
@@ -491,7 +529,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
                   <td>iDRAC 硬體警告 — Fan redundancy lost</td>
                   <td>Graylog</td>
                   <td>已解決</td>
-                  <td>Kyle</td>
+                  <td>John Doe</td>
                   <td>1 day</td>
                 </tr>
                 <tr data-goto="detail-generic">
@@ -499,7 +537,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
                   <td>AD 登入失敗次數異常 (TH-DCVer2)</td>
                   <td>Graylog</td>
                   <td>調查中</td>
-                  <td>Kyle</td>
+                  <td>John Doe</td>
                   <td>4 hr</td>
                 </tr>
                 <tr data-goto="detail-generic">
@@ -515,7 +553,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
                   <td>Graylog 索引磁碟用量偏高</td>
                   <td>Graylog</td>
                   <td>已解決</td>
-                  <td>Kyle</td>
+                  <td>John Doe</td>
                   <td>3 day</td>
                 </tr>
               </tbody>
@@ -650,7 +688,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
               <div class="comment-text">已開始排查 10.20.30.15，這台是 Marketing 部門的工作站。初步看起來像是某個 Chrome 外掛在大量發送請求。</div>
             </div>
             <div class="comment" data-rough="comment">
-              <span class="comment-author">Kyle</span>
+              <span class="comment-author">John Doe</span>
               <span class="comment-time">09:32</span>
               <div class="comment-text">收到，我這邊先確認防火牆規則最近有沒有異動。如果確定是外掛問題就先把那台隔離。</div>
             </div>
