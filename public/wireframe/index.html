@@ -63,6 +63,29 @@ tailwind.config = {
 body { font-size: 16px; color: #1c1917; background: #fff; overflow: hidden; height: 100vh; }
 code, pre, .mono { font-family: 'Courier New', monospace !important; }
 
+/* ========== HAND-DRAWN SCROLLBAR ========== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 99px; border: 2px solid #fff; }
+::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+* { scrollbar-width: thin; scrollbar-color: #d6d3d1 transparent; }
+
+/* ========== RWD ========== */
+@media (max-width: 768px) {
+  .app { flex-direction: column; }
+  .sidebar { width: 100%; min-width: 100%; height: auto; flex-direction: row; overflow-x: auto; }
+  .sidebar-logo { padding: 12px 16px; white-space: nowrap; }
+  .sidebar-nav { display: flex; flex-direction: row; padding: 0; overflow-x: auto; flex: 1; }
+  .sidebar-nav li { white-space: nowrap; padding: 10px 14px; font-size: 16px; }
+  .sidebar-version { display: none; }
+  .content { padding: 16px; }
+  .two-col { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .report-grid { grid-template-columns: 1fr; }
+  .copilot-panel { width: 100% !important; }
+  .ai-fab { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 14px; }
+}
+
 /* rough.js SVG always on top — hover backgrounds show UNDER the lines */
 svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 
@@ -1349,7 +1372,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
     // ---- Active sidebar item underline ----
     // Clear ALL old underlines first
     document.querySelectorAll('.sidebar-nav .rough-underline').forEach(function(s) { s.remove(); });
-    document.querySelectorAll('.sidebar-nav li.active').forEach(function(li) {
+    document.querySelectorAll('.sidebar-nav li.active').forEach(function(li, idx) {
       var w = li.offsetWidth;
       var h = li.offsetHeight;
       var usvg = makeSvg();
@@ -1358,11 +1381,13 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
       li.style.position = 'relative';
       li.appendChild(usvg);
       var urc = rough.svg(usvg);
+      // Each nav item gets a unique seed based on its index, so underlines look different
+      var navIndex = Array.from(li.parentNode.children).indexOf(li);
       usvg.appendChild(urc.line(12, h - 2, w - 12, h - 2, {
         stroke: '#1c1917',
         strokeWidth: 2,
         roughness: 1.5,
-        seed: nextSeed()
+        seed: 777 + navIndex * 13
       }));
     });
 
