@@ -84,18 +84,33 @@ code, pre, .mono { font-family: 'Courier New', monospace !important; }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* Tablet portrait */
+/* Tablet portrait + Phone: sidebar becomes horizontal top nav */
 @media (max-width: 768px) {
-  .app { flex-direction: column; height: auto; }
-  .sidebar { width: 100%; min-width: 100%; height: auto; flex-direction: row; overflow-x: auto; border-right: none; }
-  .sidebar-logo { padding: 10px 16px; white-space: nowrap; font-size: 16px; }
-  .sidebar-nav { display: flex; flex-direction: row; padding: 0; overflow-x: auto; flex: 1; gap: 0; }
-  .sidebar-nav li { white-space: nowrap; padding: 10px 14px; font-size: 15px; }
+  .app { flex-direction: column !important; height: 100vh !important; }
+  .sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: auto !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    flex-shrink: 0 !important;
+  }
+  .sidebar-logo { padding: 10px 12px; white-space: nowrap; font-size: 14px; flex-shrink: 0; }
+  .sidebar-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    padding: 0 !important;
+    overflow-x: auto;
+    flex: 0 !important;
+    gap: 0;
+  }
+  .sidebar-nav li { white-space: nowrap; padding: 10px 12px; font-size: 14px; flex-shrink: 0; }
   .sidebar-nav li .nav-icon { width: 16px; height: 16px; }
-  .sidebar-version { display: none; }
-  .main-area { height: calc(100vh - 52px); }
+  .sidebar-version { display: none !important; }
+  .main-area { flex: 1 !important; height: 0 !important; min-height: 0 !important; }
   .topbar { position: sticky; top: 0; z-index: 20; }
-  .content { padding: 16px; }
+  .content { padding: 16px; overflow-y: auto !important; }
   .two-col { grid-template-columns: 1fr; }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .report-grid { grid-template-columns: 1fr; }
@@ -103,11 +118,10 @@ code, pre, .mono { font-family: 'Courier New', monospace !important; }
   .ai-fab { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 14px; }
 }
 
-/* Phone */
+/* Phone: even more compact */
 @media (max-width: 430px) {
-  .sidebar { flex-wrap: nowrap; }
-  .sidebar-logo { display: none; }
-  .sidebar-nav li { padding: 8px 10px; font-size: 13px; gap: 4px; }
+  .sidebar-logo { display: none !important; }
+  .sidebar-nav li { padding: 8px 10px; font-size: 12px; gap: 4px; }
   .sidebar-nav li .nav-icon { width: 14px; height: 14px; }
   .topbar { padding: 0 12px; }
   .breadcrumb { font-size: 14px; }
