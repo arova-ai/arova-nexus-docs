@@ -70,83 +70,8 @@ code, pre, .mono { font-family: 'Courier New', monospace !important; }
 ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
 * { scrollbar-width: thin; scrollbar-color: #d6d3d1 transparent; }
 
-/* ========== RWD ========== */
-
-/* Large desktop: constrain content width */
-@media (min-width: 1920px) {
-  .content { max-width: 1400px; }
-}
-
-/* Tablet landscape / small desktop */
-@media (max-width: 1024px) {
-  .sidebar { width: 180px; min-width: 180px; }
-  .sidebar-nav li { font-size: 17px; padding: 10px 12px; }
-  .kpi-row { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* Tablet portrait + Phone: sidebar becomes horizontal top nav */
-@media (max-width: 768px) {
-  .app { flex-direction: column !important; height: 100vh !important; }
-  .sidebar {
-    width: 100% !important;
-    min-width: 100% !important;
-    height: auto !important;
-    flex-direction: row !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    flex-shrink: 0 !important;
-  }
-  .sidebar-logo { padding: 10px 12px; white-space: nowrap; font-size: 14px; flex-shrink: 0; }
-  .sidebar-nav {
-    display: flex !important;
-    flex-direction: row !important;
-    padding: 0 !important;
-    overflow-x: auto;
-    flex: 0 !important;
-    gap: 0;
-  }
-  .sidebar-nav li { white-space: nowrap; padding: 10px 12px; font-size: 14px; flex-shrink: 0; }
-  .sidebar-nav li .nav-icon { width: 16px; height: 16px; }
-  .sidebar-version { display: none !important; }
-  .main-area { flex: 1 !important; height: 0 !important; min-height: 0 !important; }
-  .topbar { position: sticky; top: 0; z-index: 20; }
-  .content { padding: 16px; overflow-y: auto !important; }
-  .two-col { grid-template-columns: 1fr; }
-  .kpi-row { grid-template-columns: repeat(2, 1fr); }
-  .report-grid { grid-template-columns: 1fr; }
-  .copilot-panel { width: 100% !important; }
-  .ai-fab { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 14px; }
-}
-
-/* Phone: even more compact */
-@media (max-width: 430px) {
-  .sidebar-logo { display: none !important; }
-  .sidebar-nav li { padding: 8px 10px; font-size: 12px; gap: 4px; }
-  .sidebar-nav li .nav-icon { width: 14px; height: 14px; }
-  .topbar { padding: 0 12px; }
-  .breadcrumb { font-size: 14px; }
-  .topbar-right { font-size: 14px; gap: 12px; }
-  .content { padding: 12px; }
-  .kpi-row { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .sketch-kpi-value { font-size: 24px; }
-  .sketch-kpi-label { font-size: 13px; }
-  .sketch-card-title { font-size: 17px; }
-  .two-col { grid-template-columns: 1fr; gap: 12px; }
-  .data-table { font-size: 12px; }
-  .sketch-table td, .sketch-table th { padding: 6px 8px; font-size: 12px; }
-  .detail-title { font-size: 20px; }
-  .copilot-panel { width: 100% !important; }
-}
-
 /* rough.js SVG always on top — hover backgrounds show UNDER the lines */
 svg.rc-svg { z-index: 10 !important; pointer-events: none; }
-
-/* ========== LAYOUT ========== */
-.app { display: flex; height: 100vh; }
-.sidebar { width: 200px; min-width: 200px; background: #fff; display: flex; flex-direction: column; height: 100vh; position: relative; }
-.main-area { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-.topbar { height: 52px; min-height: 52px; background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: relative; }
-.content { flex: 1; overflow-y: auto; padding: 24px; background: #fff; }
 
 /* ========== WIREFRAME WATERMARK ========== */
 .sketch-watermark { position: fixed; bottom: 8px; left: 220px; font-family: 'JasonHandwriting', cursive; font-size: 14px; color: #d6d3d1; z-index: 50; letter-spacing: 1px; }
@@ -172,17 +97,16 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 .sidebar-nav li.active .nav-icon { color: #1c1917; }
 
 /* ========== SIDEBAR ========== */
-.sidebar-logo { padding: 16px; font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 18px; color: #1c1917; white-space: nowrap; }
+.sidebar-logo { font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 18px; color: #1c1917; white-space: nowrap; }
 .sidebar-logo span { color: #78716c; font-weight: 500; font-size: 16px; }
-.sidebar-nav { list-style: none; padding: 12px 0; flex: 1; }
-.sidebar-nav li { padding: 12px 16px; cursor: pointer; font-family: 'JasonHandwriting', cursive; font-size: 20px; display: flex; align-items: center; gap: 10px; color: #78716c; transition: all 0.15s; }
+.sidebar-nav li { cursor: pointer; font-family: 'JasonHandwriting', cursive; color: #78716c; transition: all 0.15s; }
 .sidebar-nav li:hover { color: #1c1917; }
 .sidebar-nav li.active { font-weight: 700; color: #1c1917; position: relative; }
 .sidebar-nav li.disabled { color: #a8a29e; cursor: not-allowed; }
 .sidebar-nav li.disabled:hover { background: transparent; color: #a8a29e; }
 .sidebar-nav li .ico { font-size: 14px; min-width: 28px; text-align: center; color: #a8a29e; }
 .sidebar-nav li.active .ico { color: #1c1917; }
-.sidebar-version { padding: 14px 16px; font-family: 'JasonHandwriting', cursive; font-size: 15px; color: #a8a29e; }
+.sidebar-version { font-family: 'JasonHandwriting', cursive; font-size: 15px; color: #a8a29e; padding: 14px 16px; }
 
 /* ========== TOPBAR ========== */
 .breadcrumb { font-family: 'JasonHandwriting', cursive; font-size: 20px; color: #78716c; }
@@ -190,9 +114,6 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 .notif-badge { position: relative; cursor: pointer; color: #78716c; display: inline-flex; align-items: center; }
 .notif-badge .badge { background: #ef4444; color: #fff; font-size: 12px; padding: 1px 5px; border-radius: 8px; position: absolute; top: -8px; right: -12px; }
 .user-info { color: #78716c; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
-
-/* ========== TWO COLUMN LAYOUT ========== */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
 
 /* ========== BUTTONS (no CSS border — rough.js draws it) ========== */
 .sketch-btn { padding: 6px 16px; font-family: 'JasonHandwriting', cursive; font-size: 18px; background: white; cursor: pointer; color: #1c1917; position: relative; border: none; transition: all 0.1s; }
@@ -275,8 +196,8 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 .comment-text { font-size: 14px; margin-top: 8px; line-height: 1.6; }
 
 /* ========== AI COPILOT PANEL ========== */
-.copilot-overlay { position: fixed; top: 0; right: -420px; width: 380px; height: 100vh; background: #fff; display: flex; flex-direction: column; transition: right 0.2s ease; z-index: 100; }
-.copilot-overlay.open { right: 0; }
+.copilot-overlay { display: flex; flex-direction: column; transition: right 0.2s ease; }
+.copilot-overlay.open { right: 0 !important; }
 .copilot-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 22px; position: relative; }
 .copilot-close { cursor: pointer; font-family: 'JasonHandwriting', cursive; font-size: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #fff; transition: all 0.1s; position: relative; }
 .copilot-close:hover { background: rgba(0,0,0,0.03); }
@@ -292,7 +213,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 .copilot-input { padding: 14px 20px; display: flex; gap: 12px; position: relative; }
 
 /* ========== FLOATING AI BUTTON ========== */
-.ai-fab { position: fixed; bottom: 28px; right: 28px; width: 52px; height: 52px; background: #fff; cursor: pointer; font-family: 'JasonHandwriting', cursive; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; z-index: 90; transition: all 0.15s; color: #1c1917; border: none; border-radius: 50%; }
+.ai-fab { background: #fff; cursor: pointer; font-family: 'JasonHandwriting', cursive; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; z-index: 90; transition: all 0.15s; color: #1c1917; border: none; border-radius: 50%; }
 .ai-fab:hover { transform: translate(-1px, -1px); }
 
 /* ========== BACK LINK ========== */
@@ -304,7 +225,6 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 .page.active { display: block; }
 
 /* ========== REPORT CARDS ========== */
-.report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
 .report-card { background: #fff; padding: 20px; cursor: pointer; transition: all 0.15s; position: relative; }
 .report-card:hover { transform: translate(-1px, -1px); }
 .report-card-title { font-family: 'JasonHandwriting', cursive; font-weight: 700; font-size: 22px; margin-bottom: 6px; color: #1c1917; }
@@ -345,26 +265,26 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 
 <!-- watermark removed — version shown in sidebar only -->
 
-<div class="app">
+<div class="app flex flex-col md:flex-row h-screen">
 
   <!-- ========== SIDEBAR ========== -->
-  <aside class="sidebar" id="sidebar-el">
-    <div class="sidebar-logo">Arova Nexus <span>MVP</span></div>
-    <ul class="sidebar-nav">
-      <li class="active" data-page="dashboard"><svg class="nav-icon" data-icon="home" viewBox="0 0 24 24" width="20" height="20"></svg> Dashboard</li>
-      <li data-page="incidents"><svg class="nav-icon" data-icon="alert-triangle" viewBox="0 0 24 24" width="20" height="20"></svg> 事件管理</li>
-      <li data-page="reports"><svg class="nav-icon" data-icon="bar-chart" viewBox="0 0 24 24" width="20" height="20"></svg> 分析報表</li>
-      <li data-page="devices"><svg class="nav-icon" data-icon="server" viewBox="0 0 24 24" width="20" height="20"></svg> 設備概覽</li>
-      <li data-page="settings"><svg class="nav-icon" data-icon="settings" viewBox="0 0 24 24" width="20" height="20"></svg> 設定</li>
+  <aside class="sidebar flex flex-row md:flex-col md:w-[200px] md:min-w-[200px] md:h-screen bg-white relative overflow-x-auto md:overflow-x-visible shrink-0" id="sidebar-el">
+    <div class="sidebar-logo hidden sm:block shrink-0 p-2.5 md:p-4">Arova Nexus <span>MVP</span></div>
+    <ul class="sidebar-nav flex flex-row md:flex-col list-none md:py-3 md:flex-1 overflow-x-auto md:overflow-visible">
+      <li class="active flex items-center gap-2.5 px-3 py-2.5 md:px-4 md:py-3 cursor-pointer whitespace-nowrap md:whitespace-normal text-sm md:text-xl shrink-0" data-page="dashboard"><svg class="nav-icon" data-icon="home" viewBox="0 0 24 24" width="20" height="20"></svg> Dashboard</li>
+      <li class="flex items-center gap-2.5 px-3 py-2.5 md:px-4 md:py-3 cursor-pointer whitespace-nowrap md:whitespace-normal text-sm md:text-xl shrink-0" data-page="incidents"><svg class="nav-icon" data-icon="alert-triangle" viewBox="0 0 24 24" width="20" height="20"></svg> 事件管理</li>
+      <li class="flex items-center gap-2.5 px-3 py-2.5 md:px-4 md:py-3 cursor-pointer whitespace-nowrap md:whitespace-normal text-sm md:text-xl shrink-0" data-page="reports"><svg class="nav-icon" data-icon="bar-chart" viewBox="0 0 24 24" width="20" height="20"></svg> 分析報表</li>
+      <li class="flex items-center gap-2.5 px-3 py-2.5 md:px-4 md:py-3 cursor-pointer whitespace-nowrap md:whitespace-normal text-sm md:text-xl shrink-0" data-page="devices"><svg class="nav-icon" data-icon="server" viewBox="0 0 24 24" width="20" height="20"></svg> 設備概覽</li>
+      <li class="flex items-center gap-2.5 px-3 py-2.5 md:px-4 md:py-3 cursor-pointer whitespace-nowrap md:whitespace-normal text-sm md:text-xl shrink-0" data-page="settings"><svg class="nav-icon" data-icon="settings" viewBox="0 0 24 24" width="20" height="20"></svg> 設定</li>
     </ul>
-    <div class="sidebar-version">v0.1.0-alpha wireframe</div>
+    <div class="sidebar-version hidden md:block">v0.1.0-alpha wireframe</div>
   </aside>
 
   <!-- ========== MAIN AREA ========== -->
-  <div class="main-area">
+  <div class="main-area flex-1 flex flex-col min-h-0 overflow-hidden">
 
     <!-- ========== TOPBAR ========== -->
-    <header class="topbar" id="topbar-el">
+    <header class="topbar h-[52px] min-h-[52px] bg-white flex items-center justify-between px-4 md:px-6 relative sticky top-0 z-20 md:static" id="topbar-el">
       <div class="breadcrumb" id="breadcrumb">Dashboard</div>
       <div class="topbar-right">
         <span class="notif-badge"><svg class="nav-icon topbar-icon" data-icon="bell" viewBox="0 0 24 24" width="22" height="22" style="vertical-align:middle;"></svg><span class="badge">3</span></span>
@@ -373,7 +293,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
     </header>
 
     <!-- ========== CONTENT ========== -->
-    <div class="content">
+    <div class="content flex-1 overflow-y-auto p-4 md:p-6 bg-white">
 
       <!-- ================================================ -->
       <!-- PAGE 1: Dashboard                                 -->
@@ -383,7 +303,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
         <!-- ---- KPI Row ---- -->
         <div class="sketch-card" data-rough="card">
           <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">1</span> KPI 概覽</div>
-          <div class="grid grid-cols-4 gap-5 mb-4">
+          <div class="kpi-row grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4">
             <div class="sketch-kpi" data-rough="kpi">
               <div class="sketch-kpi-label">活躍告警</div>
               <div class="sketch-kpi-value">3</div>
@@ -409,7 +329,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
         </div>
 
         <!-- ---- Two Columns ---- -->
-        <div class="two-col">
+        <div class="two-col grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
 
           <!-- Left: Pending Incidents -->
           <div class="sketch-card" data-rough="card" style="margin-bottom: 0;">
@@ -724,7 +644,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
         <!-- ---- Report Cards ---- -->
         <div class="sketch-card" data-rough="card">
           <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">12</span> 報表卡片</div>
-          <div class="report-grid">
+          <div class="report-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6">
             <div class="report-card" data-rough="card">
               <div class="report-card-title">每日資安簡報</div>
               <div class="report-card-meta">每天 08:00 自動產出 · 最近: 2026-03-26</div>
@@ -809,7 +729,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
         <!-- ---- Device Stats ---- -->
         <div class="sketch-card" data-rough="card">
           <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">14</span> 設備統計</div>
-          <div class="grid grid-cols-5 gap-4 mb-4">
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
             <div class="sketch-kpi" data-rough="kpi"><div class="sketch-kpi-label">全部設備</div><div class="sketch-kpi-value">40</div></div>
             <div class="sketch-kpi" data-rough="kpi"><div class="sketch-kpi-label">[OK] 在線</div><div class="sketch-kpi-value">38</div></div>
             <div class="sketch-kpi" data-rough="kpi"><div class="sketch-kpi-label">[WARN] 警告</div><div class="sketch-kpi-value">2</div></div>
@@ -1063,7 +983,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 <!-- ================================================ -->
 <!-- AI Copilot Panel                                  -->
 <!-- ================================================ -->
-<div class="copilot-overlay" id="copilot-panel">
+<div class="copilot-overlay fixed top-0 w-full md:w-[380px] h-screen bg-white z-[100] right-[-100%] md:right-[-420px]" id="copilot-panel">
   <div class="copilot-header" data-rough="copilot-header">
     <span><span class="sketch-num" data-rough="circle-num">20</span> AI Copilot</span>
     <div class="copilot-close" data-rough="btn" onclick="toggleCopilot()">X</div>
@@ -1121,7 +1041,7 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 </div>
 
 <!-- Floating AI Button -->
-<button class="ai-fab" id="ai-fab-btn" onclick="toggleCopilot()">AI</button>
+<button class="ai-fab fixed bottom-4 right-4 md:bottom-7 md:right-7 w-11 h-11 md:w-[52px] md:h-[52px]" id="ai-fab-btn" onclick="toggleCopilot()">AI</button>
 
 <!-- ================================================ -->
 <!-- JAVASCRIPT — All interactions + rough.js rendering -->
