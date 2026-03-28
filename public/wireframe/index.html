@@ -177,12 +177,13 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
 .ai-section li { margin-bottom: 6px; }
 
 /* ========== TIMELINE ========== */
-.timeline { padding: 0 0 0 24px; margin-left: 16px; position: relative; }
-.timeline-entry { padding: 0 0 24px 20px; position: relative; }
-.timeline-entry::before { content: ''; width: 12px; height: 12px; border: 2px solid #a8a29e; border-radius: 50%; background: #fff; position: absolute; left: -31px; top: 2px; }
-.timeline-entry:last-child { padding-bottom: 0; }
-.timeline-time { font-family: 'JasonHandwriting', cursive; font-size: 17px; color: #78716c; font-weight: 600; }
-.timeline-text { font-size: 14px; margin-top: 4px; line-height: 1.6; }
+.timeline { padding: 0; position: relative; }
+.timeline-entry { display: flex; gap: 12px; align-items: flex-start; padding: 0 0 6px 0; position: relative; }
+.timeline-entry::before { display: none; }
+.timeline-dot { width: 20px; height: 20px; flex-shrink: 0; position: relative; margin-top: 3px; }
+.timeline-content { flex: 1; padding-bottom: 10px; }
+.timeline-time { font-size: 15px; color: #78716c; font-weight: 600; display: inline; }
+.timeline-text { font-size: 15px; line-height: 1.5; display: inline; margin-left: 8px; }
 
 /* ========== LOG ENTRIES ========== */
 .log-entry { font-family: 'Courier New', monospace; font-size: 12px; padding: 8px 14px; line-height: 1.6; background: #fff; }
@@ -566,24 +567,24 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
             <div class="sketch-card-title"><span class="sketch-num" data-rough="circle-num">9</span> 時間軸</div>
             <div class="timeline" data-rough="timeline">
               <div class="timeline-entry">
-                <div class="timeline-time">09:15:00</div>
-                <div class="timeline-text">LibreNMS 偵測到 PA-450 deny 計數急遽上升，觸發告警</div>
+                <svg class="timeline-dot" data-rough-dot="1" viewBox="0 0 20 20"></svg>
+                <div class="timeline-content"><span class="timeline-time">09:15</span><span class="timeline-text">LibreNMS 偵測到 PA-450 deny 計數急遽上升，觸發告警</span></div>
               </div>
               <div class="timeline-entry">
-                <div class="timeline-time">09:16:12</div>
-                <div class="timeline-text">Arova Nexus 自動建立事件 INC-001，嚴重度判定 SEV1</div>
+                <svg class="timeline-dot" data-rough-dot="2" viewBox="0 0 20 20"></svg>
+                <div class="timeline-content"><span class="timeline-time">09:16</span><span class="timeline-text">Nexus 自動建立 INC-001，嚴重度 SEV1</span></div>
               </div>
               <div class="timeline-entry">
-                <div class="timeline-time">09:17:30</div>
-                <div class="timeline-text">AI 引擎完成初步分析，產出摘要與建議行動</div>
+                <svg class="timeline-dot" data-rough-dot="3" viewBox="0 0 20 20"></svg>
+                <div class="timeline-content"><span class="timeline-time">09:17</span><span class="timeline-text">AI 完成初步分析，產出摘要與建議行動</span></div>
               </div>
               <div class="timeline-entry">
-                <div class="timeline-time">09:20:45</div>
-                <div class="timeline-text">通知已發送至 Teams 頻道 #soc-alerts</div>
+                <svg class="timeline-dot" data-rough-dot="4" viewBox="0 0 20 20"></svg>
+                <div class="timeline-content"><span class="timeline-time">09:20</span><span class="timeline-text">通知發送至 Teams #soc-alerts</span></div>
               </div>
               <div class="timeline-entry">
-                <div class="timeline-time">09:27:00</div>
-                <div class="timeline-text">Vincent 確認接手處理，狀態更新為「調查中」</div>
+                <svg class="timeline-dot" data-rough-dot="5" viewBox="0 0 20 20"></svg>
+                <div class="timeline-content"><span class="timeline-time">09:27</span><span class="timeline-text">Vincent 確認接手，狀態 →「調查中」</span></div>
               </div>
             </div>
             <div class="mt-4"><span class="sketch-anno">&darr; 每 60 秒自動更新</span></div>
@@ -1357,6 +1358,21 @@ svg.rc-svg { z-index: 10 !important; pointer-events: none; }
         strokeWidth: 2,
         roughness: 1.5,
         seed: 777 + navIndex * 13
+      }));
+    });
+
+    // ---- Timeline dots via rough.js ----
+    document.querySelectorAll('[data-rough-dot]').forEach(function(svgEl) {
+      while (svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
+      var dotSeed = parseInt(svgEl.dataset.roughDot) * 17 + 500;
+      var rc = rough.svg(svgEl);
+      svgEl.appendChild(rc.circle(10, 10, 14, {
+        stroke: '#1c1917',
+        strokeWidth: 1.5,
+        fill: '#1c1917',
+        fillStyle: 'solid',
+        roughness: 1.2,
+        seed: dotSeed
       }));
     });
 
